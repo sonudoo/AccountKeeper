@@ -25,6 +25,14 @@ public class AccountList {
         accountList.add(new Account(name, desc, initialBalance));
         return true;
     }
+
+    public double getTotalBalance() {
+        double total = 0;
+        for (int i = 0; i < accountList.size(); i++) {
+            total += accountList.get(i).getBalance();
+        }
+        return total;
+    }
     public ArrayList <Account> getAccounts(){
         return accountList;
     }

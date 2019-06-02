@@ -14,4 +14,23 @@ public class TransactionList {
         }
         return singleton_instance;
     }
+
+    public boolean addTransaction(Account fromAccount, double amount, boolean toAccount, String journalEntry) {
+        if (toAccount == false) {
+            if (fromAccount.withdraw(amount) == true) {
+                transactionList.add(new Transaction(fromAccount, amount, false, journalEntry));
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            fromAccount.deposit(amount);
+            transactionList.add(new Transaction(fromAccount, amount, true, journalEntry));
+            return true;
+        }
+    }
+
+    public ArrayList<Transaction> getTransactions() {
+        return transactionList;
+    }
 }

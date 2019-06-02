@@ -28,7 +28,7 @@ public class Account implements Parcelable {
         return true;
     }
     public boolean withdraw(double amount) {
-        if (amount < accountBalance) {
+        if (amount > accountBalance) {
             return false;
         } else {
             accountBalance -= amount;

@@ -10,6 +10,36 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".Main2Activity"
+            android:label="@string/title_activity_main2"></activity>
+        <activity
+            android:name=".AddTransactionActivity"
+            android:label="@string/title_activity_add_transaction"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.sonudoo.AccountKeeper.MainActivity" />
+        </activity>
+        <activity
+            android:name=".ListTransactionsActivity"
+            android:label="@string/title_activity_list_transactions"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.sonudoo.AccountKeeper.MainActivity" />
+        </activity>
+        <activity
+            android:name=".InterAccountTransferActivity"
+            android:label="@string/title_activity_inter_account_transfer"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.sonudoo.AccountKeeper.MainActivity" />
+        </activity>
+        <activity
             android:name=".EditAccountActivity"
             android:label="@string/title_activity_edit_account"
             android:parentActivityName=".AddAccountActivity"

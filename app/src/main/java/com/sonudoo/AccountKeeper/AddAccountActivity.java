@@ -29,10 +29,15 @@ public class AddAccountActivity extends AppCompatActivity {
                 EditText addAccountDesc = (EditText) findViewById(R.id.add_account_description);
                 EditText addAccountInitialBalance = (EditText) findViewById(R.id.add_account_initail_amount);
                 accountList.addAccount(addAccountName.getText().toString(), addAccountDesc.getText().toString(), Double.parseDouble(addAccountInitialBalance.getText().toString()));
-                Intent i = new Intent(AddAccountActivity.this, MainActivity.class);
-                startActivity(i);
+                finish();
             }
         });
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        // TODO: Show a snackbar in case account addition fails.
+        System.out.println("Account not added");
+    }
 }
