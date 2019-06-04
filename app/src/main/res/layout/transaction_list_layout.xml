@@ -2,29 +2,32 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_activity_transaction_list_frame_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <android.support.v7.widget.CardView
-        android:id="@+id/transaction_list_card"
+        android:id="@+id/main_activity_transaction_list_card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardCornerRadius="10dp"
+        android:layout_marginBottom="3dp"
+        app:cardCornerRadius="0dp"
         app:cardElevation="10dp"
         app:contentPadding="10dp">
 
         <android.support.constraint.ConstraintLayout
+            android:id="@+id/main_activity_transaction_list_card_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <TextView
-                android:id="@+id/transaction_list_from_account"
+                android:id="@+id/main_activity_transaction_list_from_account"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
-                android:text="TextView"
+                android:text="@string/textview"
                 android:textAlignment="center"
                 android:textSize="18sp"
                 android:textStyle="bold"
@@ -34,55 +37,55 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/transaction_list_amount"
+                android:id="@+id/main_activity_transaction_list_amount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
-                android:text="TextView"
-                app:layout_constraintBottom_toTopOf="@+id/transaction_list_date"
+                android:text="@string/textview"
+                app:layout_constraintBottom_toTopOf="@+id/main_activity_transaction_list_date"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.824"
-                app:layout_constraintStart_toEndOf="@+id/transaction_list_from_account"
+                app:layout_constraintHorizontal_bias="0.946"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.039" />
+                app:layout_constraintVertical_bias="0.0" />
 
             <TextView
-                android:id="@+id/transaction_list_journal_entry"
+                android:id="@+id/main_activity_transaction_list_journal_entry"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="28dp"
                 android:layout_marginEnd="8dp"
-                android:text="TextView"
+                android:text="@string/textview"
                 android:textSize="12sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.052"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/transaction_list_type" />
+                app:layout_constraintTop_toBottomOf="@+id/main_activity_transaction_list_type" />
 
             <TextView
-                android:id="@+id/transaction_list_date"
+                android:id="@+id/main_activity_transaction_list_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
-                android:text="TextView"
-                android:textSize="10sp"
+                android:text="@string/textview"
+                android:textSize="12sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.052"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/transaction_list_journal_entry" />
+                app:layout_constraintTop_toBottomOf="@+id/main_activity_transaction_list_journal_entry" />
 
             <TextView
-                android:id="@+id/transaction_list_type"
+                android:id="@+id/main_activity_transaction_list_type"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="36dp"
                 android:layout_marginEnd="8dp"
-                android:text="TextView"
+                android:text="@string/textview"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.239"
                 app:layout_constraintStart_toStartOf="parent"

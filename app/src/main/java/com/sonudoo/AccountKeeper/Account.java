@@ -36,7 +36,7 @@ public class Account implements Parcelable {
         }
     }
     public String toString(){
-        return accountName + " " + getBalance();
+        return accountName;
     }
 
     @Override

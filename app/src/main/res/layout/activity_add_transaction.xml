@@ -2,13 +2,13 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/coordinatorLayout3"
+    android:id="@+id/add_account_activity_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".AddTransactionActivity">
 
     <Spinner
-        android:id="@+id/add_transaction_account"
+        android:id="@+id/add_transaction_activity_transaction_account"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -17,55 +17,62 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.288"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/appBarLayout2" />
+        app:layout_constraintTop_toBottomOf="@+id/add_transaction_activity_bar_layout" />
 
     <EditText
-        android:id="@+id/add_transaction_journal_entry"
+        android:id="@+id/add_transaction_activity_transaction_journal_entry"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:ems="10"
-        android:hint="Journal Entry (Ex. Purchase Bananas)"
+        android:hint="@string/journal_entry_string"
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/add_transaction_account" />
+        app:layout_constraintTop_toBottomOf="@+id/add_transaction_activity_transaction_account"
+        android:importantForAutofill="no"
+        tools:targetApi="o" />
 
     <EditText
-        android:id="@+id/add_transaction_amount"
+        android:id="@+id/add_transaction_activity_transaction_amount"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:ems="10"
+        android:hint="@string/amount_ex_12_0"
         android:inputType="numberDecimal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/add_transaction_journal_entry" />
+        app:layout_constraintTop_toBottomOf="@+id/add_transaction_activity_transaction_journal_entry"
+        android:importantForAutofill="no"
+        tools:targetApi="o" />
 
     <Button
-        android:id="@+id/add_transaction_button_1"
+        android:id="@+id/add_transaction_activity_transaction_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        android:backgroundTint="#009688"
-        android:text="@string/Add"
+        android:backgroundTint="#3949AB"
+        android:text="@string/transact"
+        android:textAllCaps="false"
         android:textColor="#FFFFFF"
+        android:textColorLink="#3949AB"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/add_transaction_type"
+        app:layout_constraintTop_toBottomOf="@+id/add_transaction_activity_transaction_type"
         app:layout_constraintVertical_bias="0.061" />
 
     <RadioGroup
-        android:id="@+id/add_transaction_type"
+        android:id="@+id/add_transaction_activity_transaction_type"
         android:layout_width="0dp"
         android:layout_height="65dp"
         android:layout_marginStart="16dp"
@@ -74,25 +81,25 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/add_transaction_amount">
+        app:layout_constraintTop_toBottomOf="@+id/add_transaction_activity_transaction_amount">
 
         <RadioButton
-            android:id="@+id/add_account_type_1"
+            android:id="@+id/add_transaction_activity_transaction_type_1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Expense" />
+            android:text="@string/expense" />
 
         <RadioButton
-            android:id="@+id/add_account_type_2"
+            android:id="@+id/add_transaction_activity_transaction_type_2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Income" />
+            android:text="@string/income" />
     </RadioGroup>
 
     <android.support.design.widget.AppBarLayout
-        android:id="@+id/appBarLayout2"
+        android:id="@+id/add_transaction_activity_bar_layout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay"
@@ -101,7 +108,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
+            android:id="@+id/inter_account_transfer_activity_toolbar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="?attr/colorPrimary"

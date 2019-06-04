@@ -3,8 +3,6 @@ package com.sonudoo.AccountKeeper;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.PersistableBundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -23,12 +21,12 @@ public class EditAccountActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_account);
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.inter_account_transfer_activity_toolbar);
         setSupportActionBar(toolbar);
         Intent intent = getIntent();
         mAccount = intent.getParcelableExtra(ACCOUNT_NUMBER);
-        editAccountName = (EditText) findViewById(R.id.edit_account_name);
-        editAccountDesc = (EditText) findViewById(R.id.edit_account_desc);
+        editAccountName = (EditText) findViewById(R.id.edit_account_activity_account_name);
+        editAccountDesc = (EditText) findViewById(R.id.edit_account_activity_account_desc);
 
         if (savedInstanceState == null) {
             editAccountName.setText(mAccount.accountName);
@@ -39,7 +37,7 @@ public class EditAccountActivity extends AppCompatActivity {
         }
 
         final AccountList accountList = AccountList.getInstance();
-        Button editButton = (Button) findViewById(R.id.edit_button);
+        Button editButton = (Button) findViewById(R.id.edit_account_activity_button);
         editButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
@@ -48,6 +46,8 @@ public class EditAccountActivity extends AppCompatActivity {
                 finish();
             }
         });
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
     }
 
     @Override

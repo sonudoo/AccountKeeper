@@ -1,7 +1,6 @@
 package com.sonudoo.AccountKeeper;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -10,9 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 
 public class TransactionListAdapter extends RecyclerView.Adapter<TransactionListAdapter.ViewHolder> {
@@ -28,7 +26,7 @@ public class TransactionListAdapter extends RecyclerView.Adapter<TransactionList
     }
 
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = layoutInflater.inflate(R.layout.transaction_list_frame_layout, viewGroup, false);
+        View view = layoutInflater.inflate(R.layout.transaction_list_layout, viewGroup, false);
         return new ViewHolder(view);
     }
 
@@ -36,12 +34,12 @@ public class TransactionListAdapter extends RecyclerView.Adapter<TransactionList
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
         ((ViewHolder) viewHolder).transactionAccountName.setText(transactionList.get(i).fromAccount.accountName);
         ((ViewHolder) viewHolder).transactionJournalEntry.setText(transactionList.get(i).journalEntry);
-        ((ViewHolder) viewHolder).transactionAmount.setText("Rs. " + Double.toString(transactionList.get(i).amount));
-        if (transactionList.get(i).toAccount == true) {
-            ((ViewHolder) viewHolder).transactionType.setTextColor(Color.rgb(255, 0, 0));
+        ((ViewHolder) viewHolder).transactionAmount.setText("₹ " + Double.toString(transactionList.get(i).amount));
+        if (transactionList.get(i).toAccount == false) {
+            ((ViewHolder) viewHolder).transactionType.setTextColor(Color.rgb(100, 0, 0));
             ((ViewHolder) viewHolder).transactionType.setText("To Expense Account");
         } else {
-            ((ViewHolder) viewHolder).transactionType.setTextColor(Color.rgb(0, 255, 0));
+            ((ViewHolder) viewHolder).transactionType.setTextColor(Color.rgb(0, 100, 0));
             ((ViewHolder) viewHolder).transactionType.setText("From Income Account");
         }
         ((ViewHolder) viewHolder).transactionTime.setText(new Date(transactionList.get(i).timestamp).toString());
@@ -62,11 +60,11 @@ public class TransactionListAdapter extends RecyclerView.Adapter<TransactionList
 
         ViewHolder(View view) {
             super(view);
-            transactionAccountName = (TextView) view.findViewById(R.id.transaction_list_from_account);
-            transactionAmount = (TextView) view.findViewById(R.id.transaction_list_amount);
-            transactionTime = (TextView) view.findViewById(R.id.transaction_list_date);
-            transactionJournalEntry = (TextView) view.findViewById(R.id.transaction_list_journal_entry);
-            transactionType = (TextView) view.findViewById(R.id.transaction_list_type);
+            transactionAccountName = (TextView) view.findViewById(R.id.main_activity_transaction_list_from_account);
+            transactionAmount = (TextView) view.findViewById(R.id.main_activity_transaction_list_amount);
+            transactionTime = (TextView) view.findViewById(R.id.main_activity_transaction_list_date);
+            transactionJournalEntry = (TextView) view.findViewById(R.id.main_activity_transaction_list_journal_entry);
+            transactionType = (TextView) view.findViewById(R.id.main_activity_transaction_list_type);
         }
     }
 }

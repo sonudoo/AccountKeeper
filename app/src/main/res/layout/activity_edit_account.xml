@@ -2,17 +2,19 @@
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/edit_account_activity_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".EditAccountActivity">
 
     <android.support.design.widget.AppBarLayout
+        android:id="@+id/edit_account_activity_bar_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
 
         <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
+            android:id="@+id/inter_account_transfer_activity_toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
@@ -20,6 +22,62 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_edit_account" />
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/edit_account_activity_contraint_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        tools:context=".EditAccountActivity"
+        tools:showIn="@layout/activity_edit_account">
+
+        <EditText
+            android:id="@+id/edit_account_activity_account_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:ems="10"
+            android:hint="@string/name"
+            android:inputType="textPersonName"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:autofillHints=""
+            tools:targetApi="o" />
+
+        <EditText
+            android:id="@+id/edit_account_activity_account_desc"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:ems="10"
+            android:gravity="start|top"
+            android:hint="@string/description"
+            android:inputType="textMultiLine"
+            app:layout_constraintEnd_toEndOf="@+id/edit_account_activity_account_name"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/edit_account_activity_account_name"
+            app:layout_constraintTop_toBottomOf="@+id/edit_account_activity_account_name"
+            android:autofillHints=""
+            tools:targetApi="o" />
+
+        <Button
+            android:id="@+id/edit_account_activity_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="120dp"
+            android:layout_marginEnd="120dp"
+            android:layout_marginBottom="452dp"
+            android:backgroundTint="#3949AB"
+            android:text="@string/update"
+            android:textAllCaps="true"
+            android:textColor="#FFFFFF"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </android.support.constraint.ConstraintLayout>
 
 </android.support.design.widget.CoordinatorLayout>

@@ -14,16 +14,11 @@ public class AccountList {
         }
         return singleton_instance;
     }
-    public boolean addAccount(String name, String desc, double initialBalance){
 
-        /* TODO: Optimize the search */
-        for(int i=0;i<accountList.size();i++){
-            if(accountList.get(i).accountName.compareTo(name) == 0){
-                return false;
-            }
-        }
-        accountList.add(new Account(name, desc, initialBalance));
-        return true;
+    public Account addAccount(String name, String desc, double initialBalance) {
+        Account newAccount = new Account(name, desc, initialBalance);
+        accountList.add(newAccount);
+        return newAccount;
     }
 
     public double getTotalBalance() {
