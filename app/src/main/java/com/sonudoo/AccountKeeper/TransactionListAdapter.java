@@ -1,5 +1,6 @@
 package com.sonudoo.AccountKeeper;
 
+import android.accounts.Account;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
@@ -32,17 +33,17 @@ public class TransactionListAdapter extends RecyclerView.Adapter<TransactionList
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
-        ((ViewHolder) viewHolder).transactionAccountName.setText(transactionList.get(i).fromAccount.accountName);
-        ((ViewHolder) viewHolder).transactionJournalEntry.setText(transactionList.get(i).journalEntry);
-        ((ViewHolder) viewHolder).transactionAmount.setText("₹ " + Double.toString(transactionList.get(i).amount));
-        if (transactionList.get(i).toAccount == false) {
-            ((ViewHolder) viewHolder).transactionType.setTextColor(Color.rgb(100, 0, 0));
+        ((ViewHolder) viewHolder).transactionAccountName.setText(AccountList.getInstance().getAccount(transactionList.get(i).transactionAccountNumber).accountName);
+        ((ViewHolder) viewHolder).transactionJournalEntry.setText(transactionList.get(i).transactionJournalEntry);
+        ((ViewHolder) viewHolder).transactionAmount.setText("₹ " + Double.toString(transactionList.get(i).transactionAmount));
+        if (transactionList.get(i).transactionType == 0) {
+            ((ViewHolder) viewHolder).transactionType.setTextColor(Color.rgb(200, 0, 0));
             ((ViewHolder) viewHolder).transactionType.setText("To Expense Account");
         } else {
             ((ViewHolder) viewHolder).transactionType.setTextColor(Color.rgb(0, 100, 0));
             ((ViewHolder) viewHolder).transactionType.setText("From Income Account");
         }
-        ((ViewHolder) viewHolder).transactionTime.setText(new Date(transactionList.get(i).timestamp).toString());
+        ((ViewHolder) viewHolder).transactionTime.setText(new Date(transactionList.get(i).transactionTimestamp).toString());
     }
 
     @Override

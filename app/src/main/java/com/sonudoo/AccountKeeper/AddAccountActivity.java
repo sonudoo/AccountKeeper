@@ -32,14 +32,14 @@ public class AddAccountActivity extends AppCompatActivity {
                 } else {
                     try {
                         double amount = Double.parseDouble(addAccountInitialBalance.getText().toString());
-                        Account newAccount = accountList.addAccount(addAccountName.getText().toString().toUpperCase(), addAccountDesc.getText().toString(), 0);
+                        Account newAccount = accountList.addAccount(addAccountName.getText().toString().toUpperCase(), addAccountDesc.getText().toString());
                         if (amount != 0) {
-                            transactionList.addTransaction(newAccount, amount, true, "Being Initial amount added");
+                            transactionList.addTransaction(newAccount.accountNumber, amount, 1, "Being Initial amount added");
                         }
                         success = true;
                         finish();
                     } catch (Exception e) {
-                        Toast.makeText(AddAccountActivity.this, "Initial amount must not be empty", Toast.LENGTH_LONG).show();
+                        Toast.makeText(AddAccountActivity.this, e.toString(), Toast.LENGTH_LONG).show();
                     }
                 }
 

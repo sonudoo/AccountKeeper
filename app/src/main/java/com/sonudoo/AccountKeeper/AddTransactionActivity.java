@@ -38,8 +38,6 @@ public class AddTransactionActivity extends AppCompatActivity {
         addTransactionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                long addAccountIndex = addAccount.getSelectedItemId();
-                Account account = AccountList.getInstance().getAccounts().get((int) addAccountIndex);
                 double amount = Double.parseDouble(addTransactionAmount.getText().toString());
                 String journalEntry = addTransactionJournalEntry.getText().toString();
                 int id = addTransactionType.getCheckedRadioButtonId();
@@ -47,10 +45,10 @@ public class AddTransactionActivity extends AppCompatActivity {
                     Toast.makeText(AddTransactionActivity.this, "Please select if the transaction is an Expense or Income", Toast.LENGTH_LONG).show();
                 } else {
                     RadioButton radioButton = (RadioButton) findViewById(id);
-                    boolean type = false;
+                    int type = 0;
                     if (radioButton.getText().toString().equals("Income"))
-                        type = true;
-                    if (TransactionList.getInstance().addTransaction(account, amount, type, "Being " + journalEntry)) {
+                        type = 1;
+                    if (TransactionList.getInstance().addTransaction((int) addAccount.getSelectedItemId() + 1, amount, type, "Being " + journalEntry)) {
                         Toast.makeText(AddTransactionActivity.this, "Transaction successful", Toast.LENGTH_LONG).show();
                         finish();
                     } else {

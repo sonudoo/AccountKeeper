@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
             return false;
         }
     };
+    private TransactionList transactionListInstance;
 
     protected void showFragment(Fragment fragment) {
         if (fragment == null)
@@ -63,7 +64,12 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.inter_account_transfer_activity_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
-        accountListInstance = AccountList.getInstance();
+
+
+        DatabaseHandler db = new DatabaseHandler(this);
+
+        accountListInstance = AccountList.getInstance(db);
+        transactionListInstance = TransactionList.getInstance(db);
         BottomNavigationView navView = findViewById(R.id.main_activity_bottom_navigation);
         navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         showFragment(new BaseFragment());

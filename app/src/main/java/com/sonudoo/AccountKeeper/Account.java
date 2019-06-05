@@ -9,15 +9,19 @@ public class Account implements Parcelable {
     public String accountName;
     public String accountDesc;
     private double accountBalance;
-    private static int accountCount = 0;
-    public ArrayList <Transaction> list;
-    Account(String name, String desc, double initialBalance){
-        accountCount += 1;
-        this.accountNumber = accountCount;
-        this.accountName = name;
-        this.accountDesc = desc;
-        this.accountBalance = initialBalance;
-        this.list = new ArrayList<>();
+
+    Account(int accountNumber, String accountName, String accountDesc) {
+        this.accountNumber = accountNumber;
+        this.accountName = accountName;
+        this.accountDesc = accountDesc;
+        this.accountBalance = 0;
+    }
+
+    Account(int accountNumber, String accountName, String accountDesc, double accountBalance) {
+        this.accountNumber = accountNumber;
+        this.accountName = accountName;
+        this.accountDesc = accountDesc;
+        this.accountBalance = accountBalance;
     }
 
     public double getBalance(){

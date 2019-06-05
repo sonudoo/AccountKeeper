@@ -1,30 +1,25 @@
 package com.sonudoo.AccountKeeper;
 
-import java.util.Date;
-
 public class Transaction {
-    private static int transactionCount = 0;
-    public int transactionId;
-    public Account fromAccount;
-    public double amount;
-    public boolean toAccount; // 0 = Expense Account, 1 = Income Account
-    public String journalEntry;
-    public long timestamp;
-    private Transaction(){
-        Transaction.transactionCount += 1;
-        this.transactionId = Transaction.transactionCount;
-        this.timestamp = (new Date()).getTime();
-    }
+    public int transactionNumber;
+    public int transactionAccountNumber;
+    public double transactionAmount;
+    public int transactionType; // 0 = Expense Account, 1 = Income Account
+    public String transactionJournalEntry;
+    public long transactionTimestamp;
 
-    Transaction(Account account, double amount, boolean toAccount, String journalEntry) {
-        this();
-        this.fromAccount = account;
-        this.amount = amount;
-        this.toAccount = toAccount;
-        this.journalEntry = journalEntry;
+    Transaction(int transactionNumber, int transactionAccountNumber,
+                double transactionAmount, int transactionType, String transactionJournalEntry,
+                long transactionTimestamp) {
+        this.transactionNumber = transactionNumber;
+        this.transactionAccountNumber = transactionAccountNumber;
+        this.transactionAmount = transactionAmount;
+        this.transactionType = transactionType;
+        this.transactionJournalEntry = transactionJournalEntry;
+        this.transactionTimestamp = transactionTimestamp;
     }
 
     public String toString() {
-        return transactionId + " " + amount + " " + fromAccount.accountName + " " + toAccount + " " + journalEntry;
+        return transactionNumber + " " + transactionAmount + " " + transactionAccountNumber + " " + transactionJournalEntry;
     }
 }

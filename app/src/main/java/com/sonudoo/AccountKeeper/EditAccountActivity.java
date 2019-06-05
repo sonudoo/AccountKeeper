@@ -41,8 +41,9 @@ public class EditAccountActivity extends AppCompatActivity {
         editButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                mAccount.accountName = editAccountName.getText().toString();
-                mAccount.accountDesc = editAccountDesc.getText().toString();
+                accountList.updateAccount(mAccount.accountNumber,
+                        editAccountName.getText().toString(),
+                        editAccountDesc.getText().toString());
                 finish();
             }
         });
