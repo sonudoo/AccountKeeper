@@ -36,7 +36,7 @@ public class TransactionListAdapter extends RecyclerView.Adapter<TransactionList
         ((ViewHolder) viewHolder).transactionAccountName.setText(AccountList.getInstance().getAccount(transactionList.get(i).transactionAccountNumber).accountName);
         ((ViewHolder) viewHolder).transactionJournalEntry.setText(transactionList.get(i).transactionJournalEntry);
         ((ViewHolder) viewHolder).transactionAmount.setText("₹ " + Double.toString(transactionList.get(i).transactionAmount));
-        if (transactionList.get(i).transactionType == 0) {
+        if (transactionList.get(i).transactionType == 0 || transactionList.get(i).transactionType == 2) {
             ((ViewHolder) viewHolder).transactionType.setTextColor(Color.rgb(200, 0, 0));
             ((ViewHolder) viewHolder).transactionType.setText("To Expense Account");
         } else {

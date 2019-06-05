@@ -61,8 +61,8 @@ public class InterAccountTransferActivity extends AppCompatActivity {
                         } else {
                             Account fromAccount = accountListInstance.getAccounts().get((int) fromAccountIndex);
                             Account toAccount = accountListInstance.getAccounts().get((int) toAccountIndex);
-                            if (transactionListInstance.addTransaction(fromAccount.accountNumber, amount, 0, "Being Amount transferred to " + toAccount.accountName + " Account") == true) {
-                                transactionListInstance.addTransaction(toAccount.accountNumber, amount, 1, "Being Amount transferred from " + fromAccount.accountName + " Account");
+                            if (transactionListInstance.addTransaction(fromAccount.accountNumber, amount, 2, "Being Amount transferred to " + toAccount.accountName + " Account") == true) {
+                                transactionListInstance.addTransaction(toAccount.accountNumber, amount, 3, "Being Amount transferred from " + fromAccount.accountName + " Account");
                                 Toast.makeText(InterAccountTransferActivity.this, "Transfer Successful", Toast.LENGTH_LONG).show();
                                 finish();
                             } else {

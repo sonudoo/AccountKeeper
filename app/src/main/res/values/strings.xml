@@ -28,4 +28,11 @@
     <string name="name">Name</string>
     <string name="description">Description</string>
     <string name="amount_ex_100_0">Amount (Ex: 100.0)</string>
+    <string name="add">Add</string>
+    <string name="name_ex_paytm">Name (Ex: Paytm)</string>
+    <string name="description_ex_paytm_payments_bank">Description (Ex: Paytm Payments Bank)</string>
+    <string name="initial_amount_ex_266_0">Initial Amount (Ex: 266.0)</string>
+    <string name="Balance">Balance</string>
+    <string name="today_s_expenditure">Today\'s Expenditure</string>
+    <string name="today_s_income">Today\'s Income</string>
 </resources>

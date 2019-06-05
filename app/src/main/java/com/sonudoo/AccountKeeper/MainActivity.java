@@ -1,6 +1,7 @@
 package com.sonudoo.AccountKeeper;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -24,9 +25,8 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
-    private AccountListAdapter accountListAdapter;
     private AccountList accountListInstance;
-
+    private TransactionList transactionListInstance;
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -36,14 +36,16 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.navigation_home:
                     showFragment(new BaseFragment());
                     return true;
-                case R.id.navigation_dashboard:
+                case R.id.navigation_transactions:
                     showFragment(new TransactionListFragment());
                     return true;
+                case R.id.navigation_accounts:
+                    showFragment(new AccountListFragment());
             }
             return false;
         }
     };
-    private TransactionList transactionListInstance;
+
 
     protected void showFragment(Fragment fragment) {
         if (fragment == null)
@@ -52,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
         if (fragmentManager != null) {
             FragmentTransaction ft = fragmentManager.beginTransaction();
             if (ft != null) {
-                ft.replace(R.id.main_activity_frame_layout, fragment);
+                ft.replace(R.id.main_activity_scroll_view, fragment);
                 ft.commit();
             }
         }
@@ -125,34 +127,48 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public static class BaseFragment extends Fragment {
-        private AccountListAdapter accountListAdapter;
         private AccountList accountListInstance;
+        private TransactionList transactionListInstance;
         private View view;
 
         @Nullable
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             view = inflater.inflate(R.layout.content_home, container, false);
-            RecyclerView accountList = (RecyclerView) view.findViewById(R.id.main_activity_account_list);
-            GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 1);
-            accountList.setLayoutManager(gridLayoutManager);
             accountListInstance = AccountList.getInstance();
-            accountListAdapter = new AccountListAdapter(getActivity(), accountListInstance.getAccounts());
-            accountList.setAdapter(accountListAdapter);
+            transactionListInstance = TransactionList.getInstance();
             return view;
         }
 
         @Override
         public void onResume() {
             super.onResume();
-            accountListAdapter.notifyDataSetChanged();
+            double balance = accountListInstance.getTotalBalance();
+            double expenditureToday = transactionListInstance.getTodaysExpenditureAmount();
+            double expenditureYesterday = transactionListInstance.getYesterdaysExpenditureAmount();
+            double incomeToday = transactionListInstance.getTodaysIncomeAmount();
             TextView balanceText = (TextView) view.findViewById(R.id.main_activity_balance_text);
-            balanceText.setText("₹ " + Double.toString(accountListInstance.getTotalBalance()));
-            TextView noAccountsText = (TextView) view.findViewById(R.id.main_activity_no_account_text);
-            if (accountListInstance.getAccounts().size() == 0) {
-                noAccountsText.setVisibility(View.VISIBLE);
-            } else {
-                noAccountsText.setVisibility(View.INVISIBLE);
+            balanceText.setText("₹ " + Double.toString(balance));
+            TextView expenditureText = (TextView) view.findViewById(R.id.main_activity_expenditure_text);
+            expenditureText.setText("₹ " + Double.toString(expenditureToday));
+            TextView incomeText = (TextView) view.findViewById(R.id.main_activity_income_text);
+            incomeText.setText("₹ " + Double.toString(incomeToday));
+            if (expenditureToday != 0) {
+                TextView expenditureComment = (TextView) view.findViewById(R.id.main_activity_expenditure_comment);
+                if (expenditureToday >= expenditureYesterday) {
+                    expenditureComment.setTextColor(Color.rgb(100, 0, 0));
+                    if (expenditureYesterday < 0.01) {
+                        expenditureComment.setText("No expenditure was made yesterday.");
+                    } else {
+                        double percentageChange = (expenditureToday - expenditureYesterday) / expenditureYesterday;
+                        expenditureComment.setText(percentageChange + " % more than yesterday");
+                    }
+                } else {
+                    expenditureComment.setTextColor(Color.rgb(0, 200, 0));
+                    double percentageChange = (expenditureYesterday - expenditureToday) / expenditureYesterday;
+                    expenditureComment.setText(percentageChange + " % less than yesterday");
+
+                }
             }
         }
     }
@@ -170,6 +186,39 @@ public class MainActivity extends AppCompatActivity {
             TransactionListAdapter transactionListAdapter = new TransactionListAdapter(getActivity(), TransactionList.getInstance().getTransactions());
             transactionList.setAdapter(transactionListAdapter);
             return view;
+        }
+    }
+
+    public static class AccountListFragment extends Fragment {
+
+        private AccountList accountListInstance;
+        private AccountListAdapter accountListAdapter;
+        private View view;
+
+        @Nullable
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+            view = inflater.inflate(R.layout.content_list_accounts, container, false);
+
+            RecyclerView accountList = (RecyclerView) view.findViewById(R.id.main_activity_account_list);
+            GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 1);
+            accountList.setLayoutManager(gridLayoutManager);
+            accountListInstance = AccountList.getInstance();
+            accountListAdapter = new AccountListAdapter(getActivity(), accountListInstance.getAccounts());
+            accountList.setAdapter(accountListAdapter);
+            return view;
+        }
+
+        @Override
+        public void onResume() {
+            super.onResume();
+            accountListAdapter.notifyDataSetChanged();
+            TextView noAccountsText = (TextView) view.findViewById(R.id.main_activity_no_account_text);
+            if (accountListInstance.getAccounts().size() == 0) {
+                noAccountsText.setVisibility(View.VISIBLE);
+            } else {
+                noAccountsText.setVisibility(View.INVISIBLE);
+            }
         }
     }
 }

@@ -7,7 +7,12 @@
         android:title="@string/title_home" />
 
     <item
-        android:id="@+id/navigation_dashboard"
+        android:id="@+id/navigation_accounts"
+        android:icon="@mipmap/ic_launcher"
+        android:title="@string/accounts" />
+
+    <item
+        android:id="@+id/navigation_transactions"
         android:icon="@drawable/ic_dashboard_black_24dp"
         android:title="@string/title_list_transactions" />
 </menu>
