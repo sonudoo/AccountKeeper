@@ -1,0 +1,30 @@
+<resources>
+    <!-- Reply Preference -->
+    <string-array name="currencies">
+        <item>AUD - Australian Dollar</item>
+        <item>GBP - British Pound</item>
+        <item>CAD - Canadian Dollar</item>
+        <item>CHF - Swiss Franc</item>
+        <item>CNY - Chinese Yuan</item>
+        <item>EUR - Euro</item>
+        <item>INR - Indian Rupee</item>
+        <item>JPY - Japanese Yen</item>
+        <item>MYR - Malaysian Ringgit</item>
+        <item>SGD - Singapore Dollar</item>
+        <item>USD - US Dollar</item>
+    </string-array>
+
+    <string-array name="currencies_symbols">
+        <item>$</item>
+        <item>£</item>
+        <item>$</item>
+        <item>CHF</item>
+        <item>¥</item>
+        <item>€</item>
+        <item>₹</item>
+        <item>¥</item>
+        <item>RM</item>
+        <item>$</item>
+        <item>$</item>
+    </string-array>
+</resources>

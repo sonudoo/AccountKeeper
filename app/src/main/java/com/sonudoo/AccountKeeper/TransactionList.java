@@ -16,7 +16,7 @@ class Points {
 }
 
 public class TransactionList {
-    private final long DAY_DURATION = 60 * 1000;
+    private final long DAY_DURATION = 24 * 60 * 60 * 1000;
     private static TransactionList singleton_instance = null;
     private ArrayList <Transaction> transactionList;
     private DatabaseHandler dh;
@@ -163,5 +163,29 @@ public class TransactionList {
         Long time = new Date().getTime();
         Date date = new Date(time - time % (DAY_DURATION));
         return getIncomeAmount(date.getTime(), date.getTime() + (long) (DAY_DURATION));
+    }
+
+    public ArrayList<Transaction> getFilteredTransactions(long startTimeStamp, long endTimeStamp,
+                                                          long accountNumber, boolean expense,
+                                                          boolean income) {
+        ArrayList<Transaction> filteredTransactionList = new ArrayList<Transaction>();
+        int low = 0;
+        int high = transactionList.size() - 1;
+        if (startTimeStamp != -1 && endTimeStamp != -1) {
+            Points p = getTransactions(startTimeStamp, endTimeStamp);
+            if (p.x == -1 && p.y == -1) return filteredTransactionList;
+            low = p.x;
+            high = p.y;
+        }
+        for (int i = low; i <= high; i++) {
+            if (accountNumber != -1 && transactionList.get(i).transactionAccountNumber != accountNumber)
+                continue;
+            if (expense == false && (transactionList.get(i).transactionType == 0 || transactionList.get(i).transactionType == 2))
+                continue;
+            if (income == false && (transactionList.get(i).transactionType == 1 || transactionList.get(i).transactionType == 3))
+                continue;
+            filteredTransactionList.add(transactionList.get(i));
+        }
+        return filteredTransactionList;
     }
 }

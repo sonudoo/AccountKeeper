@@ -1,104 +1,125 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/add_account_activity_layout"
+    android:id="@+id/add_transaction_activity_scroll_view"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".AddTransactionActivity">
+    android:layout_height="match_parent">
 
-    <Spinner
-        android:id="@+id/add_transaction_activity_transaction_account"
+    <ScrollView
+        android:id="@+id/add_account_activity_scroll_view"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.288"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/add_transaction_activity_bar_layout" />
-
-    <EditText
-        android:id="@+id/add_transaction_activity_transaction_journal_entry"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:ems="10"
-        android:hint="@string/journal_entry_string"
-        android:inputType="textPersonName"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/add_transaction_activity_transaction_account"
-        android:importantForAutofill="no"
-        tools:targetApi="o" />
-
-    <EditText
-        android:id="@+id/add_transaction_activity_transaction_amount"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:ems="10"
-        android:hint="@string/amount_ex_12_0"
-        android:inputType="numberDecimal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/add_transaction_activity_transaction_journal_entry"
-        android:importantForAutofill="no"
-        tools:targetApi="o" />
-
-    <Button
-        android:id="@+id/add_transaction_activity_transaction_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_height="0dp"
         android:layout_marginBottom="8dp"
-        android:backgroundTint="#3949AB"
-        android:text="@string/transact"
-        android:textAllCaps="false"
-        android:textColor="#FFFFFF"
-        android:textColorLink="#3949AB"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/add_transaction_activity_transaction_type"
-        app:layout_constraintVertical_bias="0.061" />
-
-    <RadioGroup
-        android:id="@+id/add_transaction_activity_transaction_type"
-        android:layout_width="0dp"
-        android:layout_height="65dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/add_transaction_activity_transaction_amount">
+        app:layout_constraintTop_toBottomOf="@+id/add_transaction_activity_bar_layout"
+        app:layout_constraintVertical_bias="1.0">
 
-        <RadioButton
-            android:id="@+id/add_transaction_activity_transaction_type_1"
-            android:layout_width="wrap_content"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/add_account_activity_layout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/expense" />
+            tools:context=".AddTransactionActivity">
 
-        <RadioButton
-            android:id="@+id/add_transaction_activity_transaction_type_2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/income" />
-    </RadioGroup>
+            <Spinner
+                android:id="@+id/add_transaction_activity_transaction_account"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.288"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-    <android.support.design.widget.AppBarLayout
+            <EditText
+                android:id="@+id/add_transaction_activity_transaction_journal_entry"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:ems="10"
+                android:hint="@string/journal_entry_string"
+                android:importantForAutofill="no"
+                android:inputType="textPersonName"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/add_transaction_activity_transaction_account"
+                tools:targetApi="o" />
+
+            <EditText
+                android:id="@+id/add_transaction_activity_transaction_amount"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="16dp"
+                android:ems="10"
+                android:hint="@string/amount_ex_12_0"
+                android:importantForAutofill="no"
+                android:inputType="numberDecimal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/add_transaction_activity_transaction_journal_entry"
+                tools:targetApi="o" />
+
+            <Button
+                android:id="@+id/add_transaction_activity_transaction_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:backgroundTint="#3949AB"
+                android:text="@string/transact"
+                android:textAllCaps="false"
+                android:textColor="#FFFFFF"
+                android:textColorLink="#3949AB"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.508"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/add_transaction_activity_transaction_type" />
+
+
+            <RadioGroup
+                android:id="@+id/add_transaction_activity_transaction_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/add_transaction_activity_transaction_amount">
+
+                <RadioButton
+                    android:id="@+id/add_transaction_activity_transaction_type_2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/income" />
+
+                <RadioButton
+                    android:id="@+id/add_transaction_activity_transaction_type_1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="0dp"
+                    android:text="@string/expense" />
+
+            </RadioGroup>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+    <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/add_transaction_activity_bar_layout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -107,13 +128,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <android.support.v7.widget.Toolbar
+        <androidx.appcompat.widget.Toolbar
             android:id="@+id/inter_account_transfer_activity_toolbar"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?attr/colorPrimary"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
-    </android.support.design.widget.AppBarLayout>
+    </com.google.android.material.appbar.AppBarLayout>
 
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
+

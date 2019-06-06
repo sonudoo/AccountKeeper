@@ -1,8 +1,9 @@
 package com.sonudoo.AccountKeeper;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -27,19 +28,25 @@ public class AddAccountActivity extends AppCompatActivity {
                 EditText addAccountName = (EditText) findViewById(R.id.add_acount_activity_account_name);
                 EditText addAccountDesc = (EditText) findViewById(R.id.add_account_activity_account_description);
                 EditText addAccountInitialBalance = (EditText) findViewById(R.id.add_account_activity_account_initial_balance);
-                if (addAccountName.getText().toString() == "") {
+                if (addAccountName.getText().toString().compareTo("") == 0) {
                     Toast.makeText(AddAccountActivity.this, "Account name must not be empty", Toast.LENGTH_LONG).show();
                 } else {
                     try {
                         double amount = Double.parseDouble(addAccountInitialBalance.getText().toString());
-                        Account newAccount = accountList.addAccount(addAccountName.getText().toString().toUpperCase(), addAccountDesc.getText().toString());
-                        if (amount != 0) {
-                            transactionList.addTransaction(newAccount.accountNumber, amount, 1, "Being Initial amount added");
+                        if (amount < 0.01) {
+                            Toast.makeText(AddAccountActivity.this, "Invalid amount entered. It must be greater than 0.01", Toast.LENGTH_LONG).show();
+                        } else {
+                            Account newAccount = accountList.addAccount(addAccountName.getText().toString().toUpperCase(), addAccountDesc.getText().toString());
+                            if (newAccount == null) {
+                                Toast.makeText(AddAccountActivity.this, "Account name is already taken", Toast.LENGTH_LONG).show();
+                            } else {
+                                transactionList.addTransaction(newAccount.accountNumber, amount, 1, "Being Initial amount added");
+                                success = true;
+                                finish();
+                            }
                         }
-                        success = true;
-                        finish();
                     } catch (Exception e) {
-                        Toast.makeText(AddAccountActivity.this, e.toString(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(AddAccountActivity.this, "Invalid initial amount entered", Toast.LENGTH_LONG).show();
                     }
                 }
 

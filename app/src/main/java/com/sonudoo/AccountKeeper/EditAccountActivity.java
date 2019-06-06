@@ -3,11 +3,13 @@ package com.sonudoo.AccountKeeper;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.PersistableBundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class EditAccountActivity extends AppCompatActivity {
     public static final String ACCOUNT_NUMBER = "com.sonudoo.AccountKeeper.ACCOUNT_NUMBER";
@@ -41,10 +43,16 @@ public class EditAccountActivity extends AppCompatActivity {
         editButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                accountList.updateAccount(mAccount.accountNumber,
-                        editAccountName.getText().toString(),
-                        editAccountDesc.getText().toString());
-                finish();
+                if (editAccountName.getText().toString().compareTo("") == 0) {
+                    Toast.makeText(EditAccountActivity.this, "Account name must not be empty", Toast.LENGTH_LONG).show();
+                } else if (accountList.updateAccount(mAccount.accountNumber,
+                        editAccountName.getText().toString().toUpperCase(),
+                        editAccountDesc.getText().toString()) == false) {
+                    Toast.makeText(EditAccountActivity.this, "Account name clashes with another. Please choose a different name", Toast.LENGTH_LONG).show();
+                } else {
+                    finish();
+                }
+
             }
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

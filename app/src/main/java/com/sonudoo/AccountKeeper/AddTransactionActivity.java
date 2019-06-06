@@ -1,8 +1,9 @@
 package com.sonudoo.AccountKeeper;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -38,11 +39,21 @@ public class AddTransactionActivity extends AppCompatActivity {
         addTransactionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                double amount = Double.parseDouble(addTransactionAmount.getText().toString());
+                double amount;
+                try {
+                    amount = Double.parseDouble(addTransactionAmount.getText().toString());
+                } catch (Exception e) {
+                    Toast.makeText(AddTransactionActivity.this, "Invalid amount entered", Toast.LENGTH_LONG).show();
+                    return;
+                }
                 String journalEntry = addTransactionJournalEntry.getText().toString();
                 int id = addTransactionType.getCheckedRadioButtonId();
-                if (id == -1) {
+                if (journalEntry.compareTo("") == 0) {
+                    Toast.makeText(AddTransactionActivity.this, "Journal entry must not be empty", Toast.LENGTH_LONG).show();
+                } else if (id == -1) {
                     Toast.makeText(AddTransactionActivity.this, "Please select if the transaction is an Expense or Income", Toast.LENGTH_LONG).show();
+                } else if (amount < 0.01) {
+                    Toast.makeText(AddTransactionActivity.this, "Invalid amount entered.  Minimum transaction amount is 0.01", Toast.LENGTH_LONG).show();
                 } else {
                     RadioButton radioButton = (RadioButton) findViewById(id);
                     int type = 0;

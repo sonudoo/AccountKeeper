@@ -1,17 +1,19 @@
 package com.sonudoo.AccountKeeper;
 
-import android.accounts.Account;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 
 public class TransactionListAdapter extends RecyclerView.Adapter<TransactionListAdapter.ViewHolder> {
@@ -33,9 +35,11 @@ public class TransactionListAdapter extends RecyclerView.Adapter<TransactionList
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        String currency = sp.getString("currency", "₹");
         ((ViewHolder) viewHolder).transactionAccountName.setText(AccountList.getInstance().getAccount(transactionList.get(i).transactionAccountNumber).accountName);
         ((ViewHolder) viewHolder).transactionJournalEntry.setText(transactionList.get(i).transactionJournalEntry);
-        ((ViewHolder) viewHolder).transactionAmount.setText("₹ " + Double.toString(transactionList.get(i).transactionAmount));
+        ((ViewHolder) viewHolder).transactionAmount.setText(currency + " " + Double.toString(transactionList.get(i).transactionAmount));
         if (transactionList.get(i).transactionType == 0 || transactionList.get(i).transactionType == 2) {
             ((ViewHolder) viewHolder).transactionType.setTextColor(Color.rgb(200, 0, 0));
             ((ViewHolder) viewHolder).transactionType.setText("To Expense Account");

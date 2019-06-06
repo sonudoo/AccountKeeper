@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/pop_up_filter_scroll_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    android:padding="20dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/pop_up_filter_start_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:autofillHints=""
+            android:ems="10"
+            android:hint="@string/start_date"
+            android:inputType="date"
+            tools:targetApi="o" />
+
+        <EditText
+            android:id="@+id/pop_up_filter_end_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:autofillHints=""
+            android:ems="10"
+            android:hint="@string/end_date"
+            android:inputType="date"
+            tools:targetApi="o" />
+
+        <Spinner
+            android:id="@+id/pop_up_filter_account"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:spinnerMode="dialog" />
+
+        <CheckBox
+            android:id="@+id/pop_up_filter_transaction_type_1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:text="@string/expense" />
+
+        <CheckBox
+            android:id="@+id/pop_up_filter_transaction_type_2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:text="@string/income" />
+
+        <Button
+            android:id="@+id/pop_up_filter_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="#3949AB"
+            android:gravity="center|center_horizontal|center_vertical"
+            android:text="@string/apply"
+            android:textAlignment="center"
+            android:textColor="#FFFFFF" />
+    </LinearLayout>
+</ScrollView>

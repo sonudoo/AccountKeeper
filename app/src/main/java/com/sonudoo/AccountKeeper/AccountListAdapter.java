@@ -2,8 +2,12 @@ package com.sonudoo.AccountKeeper;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,9 +36,11 @@ public class AccountListAdapter extends RecyclerView.Adapter<AccountListAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, final int i) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        String currency = sp.getString("currency", "₹");
         ((ViewHolder) viewHolder).accountNameText.setText(accountList.get(i).accountName);
         ((ViewHolder) viewHolder).accountDescText.setText(accountList.get(i).accountDesc);
-        ((ViewHolder) viewHolder).accountBalanceText.setText("₹ " + Double.toString(accountList.get(i).getBalance()));
+        ((ViewHolder) viewHolder).accountBalanceText.setText(currency + " " + Double.toString(accountList.get(i).getBalance()));
         ((ViewHolder) viewHolder).editAccountButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

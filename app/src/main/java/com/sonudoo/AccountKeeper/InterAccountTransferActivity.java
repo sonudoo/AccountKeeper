@@ -2,8 +2,9 @@ package com.sonudoo.AccountKeeper;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -57,7 +58,7 @@ public class InterAccountTransferActivity extends AppCompatActivity {
                     try {
                         double amount = Double.parseDouble(interBankTransferAmount.getText().toString());
                         if (amount < 0.01) {
-                            Toast.makeText(InterAccountTransferActivity.this, "Invalid amount entered", Toast.LENGTH_LONG).show();
+                            Toast.makeText(InterAccountTransferActivity.this, "Invalid amount entered. Minimum transfer amount is 0.01", Toast.LENGTH_LONG).show();
                         } else {
                             Account fromAccount = accountListInstance.getAccounts().get((int) fromAccountIndex);
                             Account toAccount = accountListInstance.getAccounts().get((int) toAccountIndex);
@@ -76,6 +77,7 @@ public class InterAccountTransferActivity extends AppCompatActivity {
                 }
             }
         });
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
 }
