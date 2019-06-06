@@ -28,9 +28,6 @@ public class AccountList {
         this.dh = dh;
     }
     public static AccountList getInstance(){
-        if(AccountList.singleton_instance == null) {
-            singleton_instance = new AccountList();
-        }
         return singleton_instance;
     }
 

@@ -7,6 +7,20 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/main_activity_filter_transaction_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="28dp"
+        android:layout_marginBottom="76dp"
+        android:clickable="true"
+        android:focusable="true"
+        app:backgroundTint="#3949AB"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:rippleColor="#FDFDFD"
+        app:srcCompat="@android:drawable/ic_menu_sort_by_size" />
+
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/main_activity_bar_layout"
         android:layout_width="0dp"
@@ -50,47 +64,6 @@
         app:menu="@menu/bottom_nav_menu">
 
     </com.google.android.material.bottomnavigation.BottomNavigationView>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="72dp"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/main_activity_add_transaction_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:background="#FFFFFF"
-            android:clickable="true"
-            android:elevation="0dp"
-            android:focusable="true"
-            android:scrollbarTrackHorizontal="@drawable/ic_transaction"
-            android:stateListAnimator="@null"
-            android:tint="#FFFFFF"
-            app:backgroundTint="#3949AB"
-            app:elevation="0dp"
-            app:fabSize="normal"
-            app:rippleColor="#FDFDFD"
-            app:srcCompat="@drawable/ic_transaction" />
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/main_activity_add_account_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:clickable="true"
-            android:elevation="0dp"
-            android:focusable="true"
-            android:foregroundTint="#FFFFFF"
-            android:tint="#FFFFFF"
-            app:backgroundTint="#D81B60"
-            app:elevation="0dp"
-            app:srcCompat="@drawable/ic_wallet" />
-    </LinearLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

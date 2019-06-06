@@ -1,6 +1,7 @@
 package com.sonudoo.AccountKeeper;
 
 import android.app.DatePickerDialog;
+import android.app.KeyguardManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -25,6 +26,7 @@ import androidx.appcompat.widget.Toolbar;
 import android.preference.PreferenceManager;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -40,8 +42,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.time.Year;
-import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -51,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
 
     private AccountList accountListInstance;
     private TransactionList transactionListInstance;
+    private boolean startUpExecuted;
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -59,16 +60,33 @@ public class MainActivity extends AppCompatActivity {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
                     showFragment(new BaseFragment());
+                    filterButton.hide();
                     return true;
                 case R.id.navigation_transactions:
-                    showFragment(new TransactionListFragment());
+                    tlf = new TransactionListFragment();
+
+                    filterButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            tlf.popupWindow.showAtLocation(tlf.getView(), Gravity.CENTER, 0, 0);
+                            Button applyFilterButton = (Button) tlf.popupWindow.getContentView().findViewById(R.id.pop_up_filter_button);
+                            applyFilterButton.requestFocus();
+                            tlf.popupWindow.setElevation(20);
+                        }
+                    });
+                    filterButton.show();
+                    showFragment(tlf);
                     return true;
                 case R.id.navigation_accounts:
                     showFragment(new AccountListFragment());
+                    filterButton.hide();
             }
             return false;
         }
     };
+    private FloatingActionButton filterButton;
+    private TransactionListFragment tlf;
+    private BottomNavigationView navView;
 
 
     protected void showFragment(Fragment fragment) {
@@ -90,37 +108,43 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.inter_account_transfer_activity_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
+        startUpExecuted = false;
+        KeyguardManager km = (KeyguardManager) getSystemService(KEYGUARD_SERVICE);
+
+        if (km.isKeyguardSecure()) {
+            Intent authIntent = km.createConfirmDeviceCredentialIntent("Authenticate", "Authenticate");
+            startActivityForResult(authIntent, 19);
+        } else {
+            startupCode();
+        }
 
 
+    }
+
+    private void startupCode() {
         DatabaseHandler db = new DatabaseHandler(this);
 
         accountListInstance = AccountList.getInstance(db);
         transactionListInstance = TransactionList.getInstance(db);
-        BottomNavigationView navView = findViewById(R.id.main_activity_bottom_navigation);
+        navView = findViewById(R.id.main_activity_bottom_navigation);
         navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         showFragment(new BaseFragment());
-        FloatingActionButton addTransactionButton = (FloatingActionButton) findViewById(R.id.main_activity_add_transaction_button);
-        addTransactionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (accountListInstance.getAccounts().size() == 0) {
-                    Toast.makeText(MainActivity.this, "At least one account is needed to transact", Toast.LENGTH_LONG).show();
-                } else {
-                    Intent i = new Intent(MainActivity.this, AddTransactionActivity.class);
-                    startActivity(i);
-                }
-            }
-        });
-
-        FloatingActionButton addAccountButton = (FloatingActionButton) findViewById(R.id.main_activity_add_account_button);
-        addAccountButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(MainActivity.this, AddAccountActivity.class);
-                startActivity(i);
-            }
-        });
+        filterButton = (FloatingActionButton) findViewById(R.id.main_activity_filter_transaction_button);
+        filterButton.hide();
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+        startUpExecuted = true;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 19) {
+            if (resultCode == RESULT_OK) {
+                startupCode();
+            } else {
+                finish();
+            }
+        }
     }
 
     @Override
@@ -158,7 +182,10 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onResume() {
-        showFragment(new BaseFragment());
+        if (startUpExecuted) {
+            showFragment(new BaseFragment());
+            navView.setSelectedItemId(R.id.navigation_home);
+        }
         super.onResume();
 
     }
@@ -174,6 +201,28 @@ public class MainActivity extends AppCompatActivity {
             view = inflater.inflate(R.layout.content_home, container, false);
             accountListInstance = AccountList.getInstance();
             transactionListInstance = TransactionList.getInstance();
+            FloatingActionButton addTransactionButton = (FloatingActionButton) view.findViewById(R.id.main_activity_add_transaction_button);
+            addTransactionButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (accountListInstance.getAccounts().size() == 0) {
+                        Toast.makeText(getContext(), "At least one account is needed to transact", Toast.LENGTH_LONG).show();
+                    } else {
+                        Intent i = new Intent(getContext(), AddTransactionActivity.class);
+                        startActivity(i);
+                    }
+                }
+            });
+
+            FloatingActionButton addAccountButton = (FloatingActionButton) view.findViewById(R.id.main_activity_add_account_button);
+            addAccountButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent i = new Intent(getContext(), AddAccountActivity.class);
+                    startActivity(i);
+                }
+            });
+
             return view;
         }
 
@@ -218,7 +267,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static class TransactionListFragment extends Fragment {
 
-        private PopupWindow popupWindow;
+        public PopupWindow popupWindow;
         private EditText startDate;
         private long startTimestamp;
         private EditText endDate;
@@ -227,11 +276,12 @@ public class MainActivity extends AppCompatActivity {
         private CheckBox incomeCheck;
         private Spinner spinner;
         private RecyclerView transactionList;
+        private View view;
 
         @Nullable
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            View view = inflater.inflate(R.layout.content_list_transactions, container, false);
+            view = inflater.inflate(R.layout.content_list_transactions, container, false);
             transactionList = (RecyclerView) view.findViewById(R.id.main_activity_transaction_list);
             LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
             layoutManager.setReverseLayout(true);
@@ -244,59 +294,62 @@ public class MainActivity extends AppCompatActivity {
             int width = LinearLayout.LayoutParams.WRAP_CONTENT;
             int height = LinearLayout.LayoutParams.WRAP_CONTENT;
             popupWindow = new PopupWindow(popUpView, width, height, false);
-            popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
-            popupWindow.setElevation(20);
-
             startDate = (EditText) popUpView.findViewById(R.id.pop_up_filter_start_date);
             startTimestamp = -1;
             endDate = (EditText) popUpView.findViewById(R.id.pop_up_filter_end_date);
             endTimestamp = -1;
-            startDate.setOnClickListener(new View.OnClickListener() {
+            startDate.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                 @Override
-                public void onClick(View v) {
-                    DatePickerDialog dialog = new DatePickerDialog(getContext(),
-                            new DatePickerDialog.OnDateSetListener() {
-                                @Override
-                                public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                                    startDate.setText(dayOfMonth + "/" + (month + 1) + "/" + year);
-                                    startTimestamp = new GregorianCalendar(year, month, dayOfMonth).getTime().getTime();
-                                }
-                            }, Calendar.getInstance().get(Calendar.YEAR),
-                            Calendar.getInstance().get(Calendar.MONTH),
-                            Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
-                    dialog.setOnCancelListener(new DatePickerDialog.OnCancelListener() {
-                        @Override
-                        public void onCancel(DialogInterface dialogInterface) {
-                            startDate.setText("");
-                            startTimestamp = -1;
-                        }
-                    });
-                    dialog.show();
+                public void onFocusChange(View v, boolean hasFocus) {
+                    if (hasFocus == true) {
+                        DatePickerDialog dialog = new DatePickerDialog(getContext(),
+                                new DatePickerDialog.OnDateSetListener() {
+                                    @Override
+                                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                                        startDate.setText(dayOfMonth + "/" + (month + 1) + "/" + year);
+                                        startTimestamp = new GregorianCalendar(year, month, dayOfMonth).getTime().getTime();
+                                    }
+                                }, Calendar.getInstance().get(Calendar.YEAR),
+                                Calendar.getInstance().get(Calendar.MONTH),
+                                Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
+                        dialog.setOnCancelListener(new DatePickerDialog.OnCancelListener() {
+                            @Override
+                            public void onCancel(DialogInterface dialogInterface) {
+                                startDate.setText("");
+                                startTimestamp = -1;
+                            }
+                        });
+                        dialog.show();
+                    }
                 }
             });
-            endDate.setOnClickListener(new View.OnClickListener() {
+            endDate.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                 @Override
-                public void onClick(View v) {
-                    DatePickerDialog dialog = new DatePickerDialog(getContext(),
-                            new DatePickerDialog.OnDateSetListener() {
-                                @Override
-                                public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                                    endDate.setText(dayOfMonth + "/" + (month + 1) + "/" + year);
-                                    endTimestamp = new GregorianCalendar(year, month, dayOfMonth).getTime().getTime();
-                                }
-                            }, Calendar.getInstance().get(Calendar.YEAR),
-                            Calendar.getInstance().get(Calendar.MONTH),
-                            Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
-                    dialog.setOnCancelListener(new DatePickerDialog.OnCancelListener() {
-                        @Override
-                        public void onCancel(DialogInterface dialogInterface) {
-                            endDate.setText("");
-                            endTimestamp = -1;
-                        }
-                    });
-                    dialog.show();
+                public void onFocusChange(View v, boolean hasFocus) {
+                    if (hasFocus == true) {
+                        DatePickerDialog dialog = new DatePickerDialog(getContext(),
+                                new DatePickerDialog.OnDateSetListener() {
+                                    @Override
+                                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                                        endDate.setText(dayOfMonth + "/" + (month + 1) + "/" + year);
+                                        endTimestamp = new GregorianCalendar(year, month, dayOfMonth).getTime().getTime();
+                                    }
+                                }, Calendar.getInstance().get(Calendar.YEAR),
+                                Calendar.getInstance().get(Calendar.MONTH),
+                                Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
+                        dialog.setOnCancelListener(new DatePickerDialog.OnCancelListener() {
+                            @Override
+                            public void onCancel(DialogInterface dialogInterface) {
+                                endDate.setText("");
+                                endTimestamp = -1;
+                            }
+                        });
+                        dialog.show();
+                    }
                 }
+
             });
+
 
             final ArrayList<Account> accountList = (ArrayList<Account>) AccountList.getInstance().getAccounts().clone();
             accountList.add(new Account(accountList.size() + 1, "Select an Account", "", 0));
@@ -345,7 +398,14 @@ public class MainActivity extends AppCompatActivity {
                     popupWindow.dismiss();
                 }
             });
+            applyFilterButton.requestFocus();
             return view;
+        }
+
+        @Override
+        public void onPause() {
+            popupWindow.dismiss();
+            super.onPause();
         }
 
         @Override
