@@ -2,10 +2,6 @@ package com.sonudoo.AccountKeeper;
 
 import android.content.Context;
 import android.content.Intent;
-
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
@@ -15,9 +11,15 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
 import java.util.ArrayList;
 
 public class AccountListAdapter extends RecyclerView.Adapter<AccountListAdapter.ViewHolder> {
+    /**
+     * This class is the adapter for the account list recycler view.
+     */
 
     private final ArrayList<Account> accountList;
     private final LayoutInflater layoutInflater;
@@ -30,34 +32,44 @@ public class AccountListAdapter extends RecyclerView.Adapter<AccountListAdapter.
     }
 
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = layoutInflater.inflate(R.layout.account_list_layout, viewGroup, false);
+        View view = layoutInflater.inflate(R.layout.account_list_layout,
+                viewGroup, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, final int i) {
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-        String currency = sp.getString("currency", "₹");
-        ((ViewHolder) viewHolder).accountNameText.setText(accountList.get(i).accountName);
-        ((ViewHolder) viewHolder).accountDescText.setText(accountList.get(i).accountDesc);
-        ((ViewHolder) viewHolder).accountBalanceText.setText(currency + " " + Double.toString(accountList.get(i).getBalance()));
-        ((ViewHolder) viewHolder).editAccountButton.setOnClickListener(new View.OnClickListener() {
+        SharedPreferences sp =
+                PreferenceManager.getDefaultSharedPreferences(context);
+        String sharedPreferenceCurrencyKey = "currency";
+        String sharedPreferenceCurrencyDefaultValue = "₹";
+        String currency = sp.getString(sharedPreferenceCurrencyKey,
+                sharedPreferenceCurrencyDefaultValue);
+        viewHolder.accountNameText.setText(accountList.get(i).accountName);
+        viewHolder.accountDescText.setText(accountList.get(i).accountDesc);
+        viewHolder.accountBalanceText.setText(String.format("%s %s", currency
+                , accountList.get(i).getBalance()));
+        viewHolder.editAccountButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, EditAccountActivity.class);
-                intent.putExtra(EditAccountActivity.ACCOUNT_NUMBER, accountList.get(i));
-                context.startActivity(intent);
+                Intent editAccountIntent = new Intent(context,
+                        EditAccountActivity.class);
+                editAccountIntent.putExtra(EditAccountActivity.ACCOUNT_NUMBER
+                        , i + 1);
+                context.startActivity(editAccountIntent);
             }
         });
-        ((ViewHolder) viewHolder).transferAccountButton.setOnClickListener(new View.OnClickListener() {
+        viewHolder.transferAccountButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (accountList.size() < 2) {
-                    Toast.makeText(context, "At two accounts are needed to conduct a transfer", Toast.LENGTH_LONG).show();
+                    Toast.makeText(context,
+                            "At two accounts are needed to " + "conduct a " + "transfer", Toast.LENGTH_LONG).show();
                 } else {
-                    Intent intent = new Intent(context, InterAccountTransferActivity.class);
-                    intent.putExtra(InterAccountTransferActivity.ACCOUNT_NUMBER, accountList.get(i));
-                    context.startActivity(intent);
+                    Intent interAccountTransferIntent = new Intent(context,
+                            InterAccountTransferActivity.class);
+                    interAccountTransferIntent.putExtra(InterAccountTransferActivity.ACCOUNT_NUMBER, i + 1);
+                    context.startActivity(interAccountTransferIntent);
                 }
 
             }
@@ -71,19 +83,24 @@ public class AccountListAdapter extends RecyclerView.Adapter<AccountListAdapter.
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        public final TextView accountNameText;
-        public final TextView accountBalanceText;
-        public final TextView accountDescText;
-        public final Button editAccountButton;
-        public final Button transferAccountButton;
+        final TextView accountNameText;
+        final TextView accountBalanceText;
+        final TextView accountDescText;
+        final Button editAccountButton;
+        final Button transferAccountButton;
 
         ViewHolder(View view) {
             super(view);
-            accountNameText = (TextView) view.findViewById(R.id.main_activity_account_name_text);
-            accountBalanceText = (TextView) view.findViewById(R.id.main_activity_account_balance_text);
-            accountDescText = (TextView) view.findViewById(R.id.main_activity_account_desc_text);
-            editAccountButton = (Button) view.findViewById(R.id.main_activity_edit_account_button);
-            transferAccountButton = (Button) view.findViewById(R.id.main_activity_transfer_button);
+            accountNameText =
+                    view.findViewById(R.id.main_activity_account_name_text);
+            accountBalanceText =
+                    view.findViewById(R.id.main_activity_account_balance_text);
+            accountDescText =
+                    view.findViewById(R.id.main_activity_account_desc_text);
+            editAccountButton =
+                    view.findViewById(R.id.main_activity_edit_account_button);
+            transferAccountButton =
+                    view.findViewById(R.id.main_activity_transfer_button);
         }
     }
 }

@@ -2,10 +2,25 @@ package com.sonudoo.AccountKeeper;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import java.util.ArrayList;
 
 public class Account implements Parcelable {
-    public int accountNumber;
+    /**
+     * This is a parcelable class representing a single account.
+     */
+    public static final Parcelable.Creator<Integer> CREATOR =
+            new Parcelable.Creator<Integer>() {
+
+        @Override
+        public Integer createFromParcel(Parcel source) {
+            return source.readInt();
+        }
+
+        @Override
+        public Integer[] newArray(int size) {
+            return new Integer[size];
+        }
+    };
+    public final int accountNumber;
     public String accountName;
     public String accountDesc;
     private double accountBalance;
@@ -17,20 +32,22 @@ public class Account implements Parcelable {
         this.accountBalance = 0;
     }
 
-    Account(int accountNumber, String accountName, String accountDesc, double accountBalance) {
+    Account(int accountNumber, String accountName, String accountDesc,
+            double accountBalance) {
         this.accountNumber = accountNumber;
         this.accountName = accountName;
         this.accountDesc = accountDesc;
         this.accountBalance = accountBalance;
     }
 
-    public double getBalance(){
+    public double getBalance() {
         return accountBalance;
     }
-    public boolean deposit(double amount){
+
+    public void deposit(double amount) {
         accountBalance += amount;
-        return true;
     }
+
     public boolean withdraw(double amount) {
         if (amount > accountBalance) {
             return false;
@@ -39,7 +56,8 @@ public class Account implements Parcelable {
             return true;
         }
     }
-    public String toString(){
+
+    public String toString() {
         return accountName;
     }
 
@@ -52,18 +70,4 @@ public class Account implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(accountNumber);
     }
-
-    public static final Parcelable.Creator<Account> CREATOR =
-        new Parcelable.Creator<Account>(){
-
-            @Override
-            public Account createFromParcel(Parcel source) {
-                return AccountList.getInstance().getAccount(source.readInt());
-            }
-
-            @Override
-            public Account[] newArray(int size) {
-                return new Account[size];
-            }
-        };
 }

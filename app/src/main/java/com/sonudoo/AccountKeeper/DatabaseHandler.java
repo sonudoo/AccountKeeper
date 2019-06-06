@@ -6,9 +6,10 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import java.util.ArrayList;
-
-public class DatabaseHandler extends SQLiteOpenHelper {
+class DatabaseHandler extends SQLiteOpenHelper {
+    /**
+     * This class handles all the database related operations.
+     */
 
     private final static double VERSION_NUMBER = 1.0;
     private final static String DATABASE_NAME = "accountkeeper";
@@ -60,9 +61,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     public Cursor getAccounts() {
         readableDatabase = getReadableDatabase();
-        Cursor cursor = readableDatabase.query(TABLE_ACCOUNTS, new String[]{ACCOUNT_ID, ACCOUNT_NAME, ACCOUNT_DESC, ACCOUNT_BALANCE},
+        return readableDatabase.query(TABLE_ACCOUNTS, new String[]{ACCOUNT_ID
+                        , ACCOUNT_NAME, ACCOUNT_DESC, ACCOUNT_BALANCE},
                 "", new String[]{}, null, null, null, null);
-        return cursor;
     }
 
     public void updateAccount(int accountNumber, String newName, String newDesc) {
@@ -82,11 +83,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     public Cursor getTransactions() {
         readableDatabase = getReadableDatabase();
-        Cursor cursor = readableDatabase.query(TABLE_TRANSACTIONS, new String[]{TRANSACTION_ID,
+        return readableDatabase.query(TABLE_TRANSACTIONS,
+                new String[]{TRANSACTION_ID,
                         TRANSACTION_ACCOUNT_ID, TRANSACTION_AMOUNT, TRANSACTION_TYPE,
                         TRANSACTION_JOURNAL_ENTRY, TRANSACTION_TIMESTAMP},
                 "", new String[]{}, null, null, null, null);
-        return cursor;
     }
 
     public void addAccount(int accountNumber, String accountName, String accountDesc) {

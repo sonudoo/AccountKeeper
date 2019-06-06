@@ -14,7 +14,4 @@
         android:id="@+id/exit"
         android:orderInCategory="101"
         android:title="@string/exit" />
-    <item
-        android:id="@+id/add_account_menu_item"
-        android:title="@string/add_account" />
 </menu>

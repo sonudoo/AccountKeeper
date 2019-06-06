@@ -4,12 +4,10 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/add_transaction_activity_scroll_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <ScrollView
-        android:id="@+id/add_account_activity_scroll_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginBottom="8dp"
@@ -21,7 +19,6 @@
         app:layout_constraintVertical_bias="1.0">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/add_account_activity_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             tools:context=".AddTransactionActivity">
@@ -102,13 +99,11 @@
                 app:layout_constraintTop_toBottomOf="@+id/add_transaction_activity_transaction_amount">
 
                 <RadioButton
-                    android:id="@+id/add_transaction_activity_transaction_type_2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/income" />
 
                 <RadioButton
-                    android:id="@+id/add_transaction_activity_transaction_type_1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="0dp"

@@ -1,23 +1,25 @@
 package com.sonudoo.AccountKeeper;
 
+import android.content.Context;
 import android.database.Cursor;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 
 public class AccountList {
+    /**
+     * This is a singleton class representing a list of accounts.
+     */
     private static AccountList singleton_instance = null;
-    private ArrayList <Account> accountList;
-    private HashSet<String> accountNames;
-    private DatabaseHandler dh;
-    private AccountList(){
-        accountList = new ArrayList<Account>();
-    }
+    private final ArrayList<Account> accountList;
+    private final HashSet<String> accountNames;
+    private final DatabaseHandler databaseHandler;
 
-    private AccountList(DatabaseHandler dh) {
-        this();
-        accountNames = new HashSet<String>();
-        Cursor cursor = dh.getAccounts();
+    private AccountList(Context context) {
+        DatabaseHandler databaseHandler = new DatabaseHandler(context);
+        accountList = new ArrayList<>();
+        accountNames = new HashSet<>();
+        Cursor cursor = databaseHandler.getAccounts();
         while (cursor.moveToNext()) {
             accountNames.add(cursor.getString(1));
             Account account = new Account(cursor.getInt(0),
@@ -25,31 +27,36 @@ public class AccountList {
                     cursor.getDouble(3));
             accountList.add(account);
         }
-        this.dh = dh;
-    }
-    public static AccountList getInstance(){
-        return singleton_instance;
+        this.databaseHandler = databaseHandler;
     }
 
-    public static AccountList getInstance(DatabaseHandler dh) {
+    public static AccountList getInstance(Context context) {
+        /*
+          This method returns the singleton instance of the class.
+         */
         if (AccountList.singleton_instance == null) {
-            singleton_instance = new AccountList(dh);
+            singleton_instance = new AccountList(context);
         }
         return singleton_instance;
     }
 
-    public boolean exists(String name) {
+    private boolean exists(String name) {
         return this.accountNames.contains(name);
     }
 
     public Account addAccount(String accountName, String accountDesc) {
-        if (exists(accountName) == true) {
+        /*
+          This method adds a new account and ensures non-duplicate names
+         */
+        if (exists(accountName)) {
             return null;
         } else {
-            Account newAccount = new Account(accountList.size() + 1, accountName, accountDesc);
+            Account newAccount = new Account(accountList.size() + 1,
+                    accountName, accountDesc);
             accountNames.add(accountName);
             accountList.add(newAccount);
-            dh.addAccount(accountList.size(), accountName, accountDesc);
+            databaseHandler.addAccount(accountList.size(), accountName,
+                    accountDesc);
             return newAccount;
         }
     }
@@ -61,16 +68,22 @@ public class AccountList {
         }
         return total;
     }
-    public ArrayList <Account> getAccounts(){
+
+    public ArrayList<Account> getAccounts() {
         return accountList;
     }
-    public Account getAccount(int accountNumber){
-        return accountList.get(accountNumber-1);
+
+    public Account getAccount(int accountNumber) {
+        return accountList.get(accountNumber - 1);
     }
 
-    public boolean updateAccount(int accountNumber, String newName, String newDesc) {
+    public boolean updateAccount(int accountNumber, String newName,
+                                 String newDesc) {
+        /*
+          This method updates the account name and description of an account.
+         */
         if (newName.compareTo(accountList.get(accountNumber - 1).accountName) != 0) {
-            if (exists(newName) == true) {
+            if (exists(newName)) {
                 return false;
             } else {
                 accountNames.remove(accountList.get(accountNumber - 1).accountName);
@@ -79,7 +92,7 @@ public class AccountList {
         }
         accountList.get(accountNumber - 1).accountName = newName;
         accountList.get(accountNumber - 1).accountDesc = newDesc;
-        dh.updateAccount(accountNumber, newName, newDesc);
+        databaseHandler.updateAccount(accountNumber, newName, newDesc);
         return true;
     }
 }
