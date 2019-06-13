@@ -1,14 +1,21 @@
 package com.sonudoo.AccountKeeper;
 
+import android.Manifest;
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.KeyguardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.util.Base64;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -30,6 +37,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -39,27 +48,41 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.gson.Gson;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
+
+    public static final String ACCOUNT_KEEPER_DIRECTORY = "/AccountKeeper";
+    public static final String SEPARATOR_CONSTANT = "\n\n@@\n\n";
     /*
-      Main Activity has three fragments within -
-      1. Base fragment containing Home baseFragmentView.
-      2. Account list fragment containing account list baseFragmentView.
-      3. Transaction list fragment containing transaction list
-      baseFragmentView and
-      related filter popup views.
-     */
-    /**
+                      Main Activity has three fragments within -
+                      1. Base fragment containing Home baseFragmentView.
+                      2. Account list fragment containing account list
+                      baseFragmentView.
+                      3. Transaction list fragment containing transaction list
+                      baseFragmentView and
+                      related filter popup views.
+                     */
+    /*
      * isStartupExecuted is set to true only when the user has passed the
      * authentication.
      */
     private final int AUTHENTICATION_REQUEST_CODE = 19;
+    private final int READ_EXTERNAL_STORAGE_REQUEST_CODE = 2343;
+    private final int WRITE_EXTERNAL_STORAGE_REQUEST_CODE = 2344;
+    private final int RESTORE_REQUEST_CODE = 20;
     private boolean isStartupCodeExecuted;
     private FloatingActionButton filterButton;
     private TransactionListFragment transactionListFragment;
@@ -148,7 +171,48 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String[] permissions,
+                                           int[] grantResults) {
+        switch (requestCode) {
+            case READ_EXTERNAL_STORAGE_REQUEST_CODE: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                } else {
+                    Toast.makeText(this, "Backup/Restore functionality " +
+                            "won't " + "work", Toast.LENGTH_LONG).show();
+                }
+                return;
+            }
+            case WRITE_EXTERNAL_STORAGE_REQUEST_CODE: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                } else {
+                    Toast.makeText(this, "Backup/Restore functionality won't "
+                            + "work", Toast.LENGTH_LONG).show();
+                }
+                return;
+            }
+        }
+    }
     private void startupCode() {
+        /*
+         Check for the storage permissions first
+         */
+        boolean hasPermission = (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED);
+        if (!hasPermission) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    WRITE_EXTERNAL_STORAGE_REQUEST_CODE);
+        }
+
+        hasPermission = (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED);
+        if (!hasPermission) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                    READ_EXTERNAL_STORAGE_REQUEST_CODE);
+        }
         /*
           filterButton belongs to main activity baseFragmentView because it
           requires a
@@ -176,18 +240,97 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode,
-                                    Intent data) {
+                                    Intent resultData) {
         /*
           This method handles the result of authentication.
           If authentication is successful then it performs normal startup.
           Else the activity closes itself.
          */
-        super.onActivityResult(requestCode, resultCode, data);
+        super.onActivityResult(requestCode, resultCode, resultData);
         if (requestCode == AUTHENTICATION_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 startupCode();
             } else {
                 finish();
+            }
+        }
+        if (requestCode == RESTORE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            Uri uri = null;
+            if (resultData != null) {
+                uri = resultData.getData();
+                try {
+                    InputStream inputStream =
+                            getContentResolver().openInputStream(uri);
+                    byte[] tmpArray = new byte[10000000];
+                    int data;
+                    int filePtr = 0;
+                    while ((data = inputStream.read()) != -1) {
+                        tmpArray[filePtr++] = (byte) data;
+                    }
+                    byte[] tmpArrayCopy = {};
+                    tmpArrayCopy = Arrays.copyOf(tmpArray, filePtr);
+
+                    Cipher cipher = Cipher.getInstance();
+                    SharedPreferences sharedPreferences =
+                            PreferenceManager.getDefaultSharedPreferences(this);
+                    String passcodeString = sharedPreferences.getString(
+                            "backup-pin", "-1");
+                    int passcode = -1;
+                    try {
+                        passcode = Integer.parseInt(passcodeString);
+                    } catch (Exception e) {
+                        Toast.makeText(this, "Please set a valid numeric " +
+                                "encryption key in the " + "settings",
+                                Toast.LENGTH_LONG).show();
+                    }
+
+                    if (passcode != -1) {
+
+                        String encryptedString = new String(tmpArrayCopy); //
+                        // Base 64
+                        // encrypted
+                        // string
+                        Log.d("File", encryptedString);
+
+                        String decryptedString =
+                                cipher.decryptString(encryptedString,
+                                        passcode); // Base 64
+                        // decrypted string
+                        String originalString =
+                                new String(android.util.Base64.decode(decryptedString, Base64.DEFAULT));
+                        Log.d("File", originalString);
+                        String[] d = originalString.split(SEPARATOR_CONSTANT);
+                        Log.d("File", d[0]);
+                        Gson gson = new Gson();
+                        Account[] newAccountList = gson.fromJson(d[0],
+                                Account[].class);
+                        Transaction[] newTransactionList = gson.fromJson(d[1]
+                                , Transaction[].class);
+
+                        AccountList accountListInstance =
+                                AccountList.getInstance(this);
+                        accountListInstance.restoreDatabase(newAccountList);
+
+                        TransactionList transactionListInstance =
+                                TransactionList.getInstance(this);
+                        transactionListInstance.restoreDatabase(newTransactionList);
+                        Toast.makeText(this, "Restore Successful!",
+                                Toast.LENGTH_LONG).show();
+
+                    } else {
+                        Toast.makeText(this, "Please set a valid numeric " +
+                                "encryption key in the " + "settings",
+                                Toast.LENGTH_LONG).show();
+                    }
+
+                } catch (FileNotFoundException e) {
+                    Toast.makeText(this, "An error occurred. Please make " +
+                            "sure that you have provided the " + "storage " + "permissions to the app.", Toast.LENGTH_LONG).show();
+                } catch (IOException e) {
+                    Toast.makeText(this, "An error occurred. Please make " +
+                            "sure that you have provided the " + "storage " + "permissions to the app.", Toast.LENGTH_LONG).show();
+                }
+
             }
         }
     }
@@ -214,7 +357,76 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.share) {
+        if (id == R.id.backup) {
+            AccountList accountListInstance = AccountList.getInstance(this);
+            TransactionList transactionListInstance =
+                    TransactionList.getInstance(this);
+            Gson gson = new Gson();
+            String accountListJson =
+                    gson.toJson(accountListInstance.getAccounts());
+            String transactionListJson =
+                    gson.toJson(transactionListInstance.getTransactions());
+            Cipher cipher = Cipher.getInstance();
+            SharedPreferences sharedPreferences =
+                    PreferenceManager.getDefaultSharedPreferences(this);
+            String passcodeString = sharedPreferences.getString("backup-pin",
+                    "-1");
+            int passcode = -1;
+            try {
+                passcode = Integer.parseInt(passcodeString);
+            } catch (Exception e) {
+                Toast.makeText(this,
+                        "Please set a valid numeric encryption " + "key in " +
+                                "the " + "settings", Toast.LENGTH_LONG).show();
+            }
+            if (passcode != -1) {
+                /*
+                 * Convert the UTF-16 string to base 64 string. This would
+                 * help in encryption which only supports each character
+                 * represented by maximum of 7-bit only ( < 128 ASCII).
+                 * The combined base 64 string is converted to encrypted base
+                 * 64 string.
+                 * The encrypted string is then saved to output stream using
+                 * UTF-8 encoding.
+                 */
+                String combinedString =
+                        android.util.Base64.encodeToString((accountListJson + SEPARATOR_CONSTANT + transactionListJson).getBytes(), Base64.DEFAULT);
+
+                String stringtoSave = cipher.encryptString(combinedString,
+                        passcode);
+                Log.d("File", stringtoSave);
+                File accountKeeperDirectory =
+                        new File(Environment.getExternalStorageDirectory().getAbsolutePath(), ACCOUNT_KEEPER_DIRECTORY);
+                accountKeeperDirectory.mkdirs();
+                String root =
+                        Environment.getExternalStorageDirectory().getAbsolutePath() + ACCOUNT_KEEPER_DIRECTORY;
+                String backupFilename =
+                        "backup_" + (new Date().toString()) + ".ak";
+
+                File backupFile = new File(root, backupFilename);
+                try {
+                    FileOutputStream f = new FileOutputStream(backupFile);
+                    f.write(stringtoSave.getBytes());
+                    f.close();
+                    Toast.makeText(this,
+                            "Saved Successfully to " + ACCOUNT_KEEPER_DIRECTORY + " folder", Toast.LENGTH_LONG).show();
+                } catch (FileNotFoundException e) {
+                    Toast.makeText(this, "An error occurred. Please make " +
+                            "sure that you have provided the " + "storage " + "permissions to the app.", Toast.LENGTH_LONG).show();
+                } catch (IOException e) {
+                    Toast.makeText(this, "An error occurred. Please make " +
+                            "sure that you have provided the " + "storage " + "permissions to the app.", Toast.LENGTH_LONG).show();
+                }
+            } else {
+                Toast.makeText(this,
+                        "Please set a valid numeric encryption " + "key in " +
+                                "the " + "settings", Toast.LENGTH_LONG).show();
+            }
+        } else if (id == R.id.restore) {
+            Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+            intent.setType("*/*");
+            startActivityForResult(intent, RESTORE_REQUEST_CODE);
+        } else if (id == R.id.share) {
             Intent shareAppIntent = new Intent(Intent.ACTION_SEND);
             shareAppIntent.setType("text/plain");
             shareAppIntent.putExtra(Intent.EXTRA_TEXT, "Download Account " +

@@ -112,4 +112,17 @@ class DatabaseHandler extends SQLiteOpenHelper {
         cv.put(TRANSACTION_TIMESTAMP, transactionTimestamp);
         writableDatabase.insert(TABLE_TRANSACTIONS, null, cv);
     }
+
+    public void cleanAccountDatabase() {
+        writableDatabase = getWritableDatabase();
+        String TRUNCATE_ACCOUNTS_TABLE = "DELETE FROM " + TABLE_ACCOUNTS;
+        writableDatabase.execSQL(TRUNCATE_ACCOUNTS_TABLE);
+    }
+
+    public void cleanTransactionDatabase() {
+        writableDatabase = getWritableDatabase();
+        String TRUNCATE_TRANSACTIONS_TABLE =
+                "DELETE FROM " + TABLE_TRANSACTIONS;
+        writableDatabase.execSQL(TRUNCATE_TRANSACTIONS_TABLE);
+    }
 }

@@ -14,7 +14,8 @@
   ~ limitations under the License.
   -->
 
-<androidx.preference.PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory app:title="General">
 
@@ -34,9 +35,13 @@
 
     </PreferenceCategory>
 
-    <PreferenceCategory app:title="Credits">
+    <PreferenceCategory app:title="Backup/Restore">
 
-
+        <EditTextPreference
+            android:digits="0123456789"
+            android:inputType="number"
+            app:key="backup-pin"
+            app:title="Pin" />
     </PreferenceCategory>
 
 </androidx.preference.PreferenceScreen>

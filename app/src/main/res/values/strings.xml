@@ -32,6 +32,8 @@
     <string name="today_s_expenditure">Today\'s Expenditure</string>
     <string name="today_s_income">Today\'s Income</string>
     <string name="title_activity_settings">Settings</string>
+    <string name="backup">Backup</string>
+    <string name="restore">Restore</string>
 
     <!-- Preference Titles -->
 

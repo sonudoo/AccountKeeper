@@ -2,6 +2,7 @@ package com.sonudoo.AccountKeeper;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -217,5 +218,16 @@ class TransactionList {
             filteredTransactionList.add(transactionList.get(i));
         }
         return filteredTransactionList;
+    }
+
+    public void restoreDatabase(Transaction[] transactionList) {
+        databaseHandler.cleanTransactionDatabase();
+        for (int i = 0; i < transactionList.length; i++) {
+            Log.d("File", "" + transactionList[i].transactionAmount);
+            addTransaction(transactionList[i].transactionAccountNumber,
+                    transactionList[i].transactionAmount,
+                    transactionList[i].transactionType,
+                    transactionList[i].transactionJournalEntry);
+        }
     }
 }
