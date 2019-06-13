@@ -98,9 +98,10 @@ public class AccountList {
 
     public void restoreDatabase(Account[] accountsList) {
         databaseHandler.cleanAccountDatabase();
-        for (int i = 0; i < accountsList.length; i++) {
-            addAccount(accountsList[i].accountName,
-                    accountsList[i].accountDesc);
+        this.accountList.clear();
+        this.accountNames.clear();
+        for (Account account : accountsList) {
+            addAccount(account.accountName, account.accountDesc);
         }
     }
 }

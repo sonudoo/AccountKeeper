@@ -27,8 +27,8 @@ public class Cipher {
 
     private String arraytoString(int[] resultArray) {
         String resultString = "";
-        for (int i = 0; i < resultArray.length; i++) {
-            resultString += (char) resultArray[i];
+        for (int i1 : resultArray) {
+            resultString += (char) i1;
         }
         return resultString;
     }
@@ -36,15 +36,13 @@ public class Cipher {
     public String encryptString(String s, int passcode) {
         int[] stringArray = stringtoArray(s);
         int[] resultArray = encrypt(passcode, stringArray);
-        String resultString = arraytoString(resultArray);
-        return resultString;
+        return arraytoString(resultArray);
     }
 
     public String decryptString(String s, int passcode) {
         int[] stringArray = stringtoArray(s);
         int[] resultArray = decrypt(passcode, stringArray);
-        String resultString = arraytoString(resultArray);
-        return resultString;
+        return arraytoString(resultArray);
     }
 
     private native int[] encrypt(int key, int[] array);

@@ -66,7 +66,7 @@ extern "C" JNIEXPORT jintArray  JNICALL Java_com_sonudoo_AccountKeeper_Cipher_en
     return result;
 }
 
-JNIEXPORT jintArray  JNICALL Java_com_sonudoo_AccountKeeper_Cipher_decrypt
+extern "C" JNIEXPORT jintArray  JNICALL Java_com_sonudoo_AccountKeeper_Cipher_decrypt
         (JNIEnv *env, jobject obj, jint passcode, jintArray array) {
     jsize len = (env)->GetArrayLength(array);
     jint *body = (env)->GetIntArrayElements(array, 0);

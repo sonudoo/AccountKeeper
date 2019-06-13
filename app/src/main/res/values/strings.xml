@@ -45,4 +45,5 @@
     <string name="apply">Apply</string>
     <string name="to_expense_account">To Expense Account</string>
     <string name="from_income_account">From Income Account</string>
+    <string name="enter_a_6_digit_pin">Enter 6 digit PIN</string>
 </resources>

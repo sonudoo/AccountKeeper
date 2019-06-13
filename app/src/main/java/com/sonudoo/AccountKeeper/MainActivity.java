@@ -2,7 +2,9 @@ package com.sonudoo.AccountKeeper;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.app.KeyguardManager;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -39,6 +41,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -64,8 +67,8 @@ import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static final String ACCOUNT_KEEPER_DIRECTORY = "/AccountKeeper";
-    public static final String SEPARATOR_CONSTANT = "\n\n@@\n\n";
+    private static final String ACCOUNT_KEEPER_DIRECTORY = "/AccountKeeper";
+    private static final String SEPARATOR_CONSTANT = "\n\n@@\n\n";
     /*
                       Main Activity has three fragments within -
                       1. Base fragment containing Home baseFragmentView.
@@ -190,10 +193,10 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(this, "Backup/Restore functionality won't "
                             + "work", Toast.LENGTH_LONG).show();
                 }
-                return;
             }
         }
     }
+
     private void startupCode() {
         /*
          Check for the storage permissions first
@@ -255,81 +258,13 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         if (requestCode == RESTORE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            Uri uri = null;
+            Uri uri;
             if (resultData != null) {
                 uri = resultData.getData();
-                try {
-                    InputStream inputStream =
-                            getContentResolver().openInputStream(uri);
-                    byte[] tmpArray = new byte[10000000];
-                    int data;
-                    int filePtr = 0;
-                    while ((data = inputStream.read()) != -1) {
-                        tmpArray[filePtr++] = (byte) data;
-                    }
-                    byte[] tmpArrayCopy = {};
-                    tmpArrayCopy = Arrays.copyOf(tmpArray, filePtr);
-
-                    Cipher cipher = Cipher.getInstance();
-                    SharedPreferences sharedPreferences =
-                            PreferenceManager.getDefaultSharedPreferences(this);
-                    String passcodeString = sharedPreferences.getString(
-                            "backup-pin", "-1");
-                    int passcode = -1;
-                    try {
-                        passcode = Integer.parseInt(passcodeString);
-                    } catch (Exception e) {
-                        Toast.makeText(this, "Please set a valid numeric " +
-                                "encryption key in the " + "settings",
-                                Toast.LENGTH_LONG).show();
-                    }
-
-                    if (passcode != -1) {
-
-                        String encryptedString = new String(tmpArrayCopy); //
-                        // Base 64
-                        // encrypted
-                        // string
-                        Log.d("File", encryptedString);
-
-                        String decryptedString =
-                                cipher.decryptString(encryptedString,
-                                        passcode); // Base 64
-                        // decrypted string
-                        String originalString =
-                                new String(android.util.Base64.decode(decryptedString, Base64.DEFAULT));
-                        Log.d("File", originalString);
-                        String[] d = originalString.split(SEPARATOR_CONSTANT);
-                        Log.d("File", d[0]);
-                        Gson gson = new Gson();
-                        Account[] newAccountList = gson.fromJson(d[0],
-                                Account[].class);
-                        Transaction[] newTransactionList = gson.fromJson(d[1]
-                                , Transaction[].class);
-
-                        AccountList accountListInstance =
-                                AccountList.getInstance(this);
-                        accountListInstance.restoreDatabase(newAccountList);
-
-                        TransactionList transactionListInstance =
-                                TransactionList.getInstance(this);
-                        transactionListInstance.restoreDatabase(newTransactionList);
-                        Toast.makeText(this, "Restore Successful!",
-                                Toast.LENGTH_LONG).show();
-
-                    } else {
-                        Toast.makeText(this, "Please set a valid numeric " +
-                                "encryption key in the " + "settings",
-                                Toast.LENGTH_LONG).show();
-                    }
-
-                } catch (FileNotFoundException e) {
-                    Toast.makeText(this, "An error occurred. Please make " +
-                            "sure that you have provided the " + "storage " + "permissions to the app.", Toast.LENGTH_LONG).show();
-                } catch (IOException e) {
-                    Toast.makeText(this, "An error occurred. Please make " +
-                            "sure that you have provided the " + "storage " + "permissions to the app.", Toast.LENGTH_LONG).show();
-                }
+                RestoreDialogFragment restoreDialogFragment =
+                        new RestoreDialogFragment(uri);
+                restoreDialogFragment.show(getSupportFragmentManager(),
+                        "Restore");
 
             }
         }
@@ -358,70 +293,9 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.backup) {
-            AccountList accountListInstance = AccountList.getInstance(this);
-            TransactionList transactionListInstance =
-                    TransactionList.getInstance(this);
-            Gson gson = new Gson();
-            String accountListJson =
-                    gson.toJson(accountListInstance.getAccounts());
-            String transactionListJson =
-                    gson.toJson(transactionListInstance.getTransactions());
-            Cipher cipher = Cipher.getInstance();
-            SharedPreferences sharedPreferences =
-                    PreferenceManager.getDefaultSharedPreferences(this);
-            String passcodeString = sharedPreferences.getString("backup-pin",
-                    "-1");
-            int passcode = -1;
-            try {
-                passcode = Integer.parseInt(passcodeString);
-            } catch (Exception e) {
-                Toast.makeText(this,
-                        "Please set a valid numeric encryption " + "key in " +
-                                "the " + "settings", Toast.LENGTH_LONG).show();
-            }
-            if (passcode != -1) {
-                /*
-                 * Convert the UTF-16 string to base 64 string. This would
-                 * help in encryption which only supports each character
-                 * represented by maximum of 7-bit only ( < 128 ASCII).
-                 * The combined base 64 string is converted to encrypted base
-                 * 64 string.
-                 * The encrypted string is then saved to output stream using
-                 * UTF-8 encoding.
-                 */
-                String combinedString =
-                        android.util.Base64.encodeToString((accountListJson + SEPARATOR_CONSTANT + transactionListJson).getBytes(), Base64.DEFAULT);
-
-                String stringtoSave = cipher.encryptString(combinedString,
-                        passcode);
-                Log.d("File", stringtoSave);
-                File accountKeeperDirectory =
-                        new File(Environment.getExternalStorageDirectory().getAbsolutePath(), ACCOUNT_KEEPER_DIRECTORY);
-                accountKeeperDirectory.mkdirs();
-                String root =
-                        Environment.getExternalStorageDirectory().getAbsolutePath() + ACCOUNT_KEEPER_DIRECTORY;
-                String backupFilename =
-                        "backup_" + (new Date().toString()) + ".ak";
-
-                File backupFile = new File(root, backupFilename);
-                try {
-                    FileOutputStream f = new FileOutputStream(backupFile);
-                    f.write(stringtoSave.getBytes());
-                    f.close();
-                    Toast.makeText(this,
-                            "Saved Successfully to " + ACCOUNT_KEEPER_DIRECTORY + " folder", Toast.LENGTH_LONG).show();
-                } catch (FileNotFoundException e) {
-                    Toast.makeText(this, "An error occurred. Please make " +
-                            "sure that you have provided the " + "storage " + "permissions to the app.", Toast.LENGTH_LONG).show();
-                } catch (IOException e) {
-                    Toast.makeText(this, "An error occurred. Please make " +
-                            "sure that you have provided the " + "storage " + "permissions to the app.", Toast.LENGTH_LONG).show();
-                }
-            } else {
-                Toast.makeText(this,
-                        "Please set a valid numeric encryption " + "key in " +
-                                "the " + "settings", Toast.LENGTH_LONG).show();
-            }
+            BackupDialogFragment pinDialogFragment =
+                    BackupDialogFragment.getInstance();
+            pinDialogFragment.show(getSupportFragmentManager(), "Backup");
         } else if (id == R.id.restore) {
             Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
             intent.setType("*/*");
@@ -445,12 +319,12 @@ public class MainActivity extends AppCompatActivity {
 
 
     static class BaseFragment extends Fragment {
-        private final String sharedPreferenceCurrencyKey = "currency";
-        private final String sharedPreferenceCurrencyDefault = "₹";
-        private final boolean attachToRoot = false;
         /**
          * This inner class holds views and data for BaseFragment
          */
+        private final String sharedPreferenceCurrencyKey = "currency";
+        private final String sharedPreferenceCurrencyDefault = "₹";
+        private final boolean attachToRoot = false;
         private AccountList accountListInstance;
         private TransactionList transactionListInstance;
         private View baseFragmentView;
@@ -541,7 +415,7 @@ public class MainActivity extends AppCompatActivity {
                      */
                     expenditureComment.setTextColor(Color.rgb(200, 0, 0));
                     if (expenditureYesterday < 0.01) {
-                        expenditureComment.setText("No " + "expenditure was " + "made yesterday.");
+                        expenditureComment.setText("No expenditure was made " + "yesterday.");
                     } else {
                         double percentageChange =
                                 (expenditureToday - expenditureYesterday) * 100 / expenditureYesterday;
@@ -552,7 +426,8 @@ public class MainActivity extends AppCompatActivity {
                       Green text would be displayed.
                      */
                     expenditureComment.setTextColor(Color.rgb(0, 100, 0));
-                    double percentageChange = (expenditureYesterday - expenditureToday) * 100 / expenditureYesterday;
+                    double percentageChange =
+                            (expenditureYesterday - expenditureToday) * 100 / expenditureYesterday;
                     expenditureComment.setText(String.format("%s%% less than "
                             + "yesterday", String.format("%.2f",
                             percentageChange)));
@@ -588,7 +463,8 @@ public class MainActivity extends AppCompatActivity {
 
         @Nullable
         @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        public View onCreateView(LayoutInflater inflater, ViewGroup container
+                , Bundle savedInstanceState) {
             mContext = getContext();
             transactionListFragmentView =
                     inflater.inflate(R.layout.content_list_transactions,
@@ -651,9 +527,8 @@ public class MainActivity extends AppCompatActivity {
                                         new GregorianCalendar(year, month,
                                                 dayOfMonth).getTime().getTime();
                             }
-                        }, Calendar.getInstance().get(Calendar.YEAR),
-                                Calendar.getInstance().get(Calendar.MONTH),
-                                Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
+                                        },
+                                        Calendar.getInstance().get(Calendar.YEAR), Calendar.getInstance().get(Calendar.MONTH), Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
                         dialog.setOnCancelListener(new DatePickerDialog.OnCancelListener() {
                             @Override
                             public void onCancel(DialogInterface dialogInterface) {
@@ -906,6 +781,270 @@ public class MainActivity extends AppCompatActivity {
                 noAccountsText.setVisibility(View.VISIBLE);
             } else {
                 noAccountsText.setVisibility(View.INVISIBLE);
+            }
+        }
+    }
+
+    public static class BackupDialogFragment extends DialogFragment {
+        static BackupDialogFragment singleton_instance = null;
+        private EditText cipherPin;
+
+        static BackupDialogFragment getInstance() {
+            if (BackupDialogFragment.singleton_instance == null) {
+                singleton_instance = new BackupDialogFragment();
+            }
+            return singleton_instance;
+        }
+
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            setStyle(DialogFragment.STYLE_NORMAL,
+                    android.R.style.Theme_DeviceDefault_Dialog);
+        }
+
+        @NonNull
+        @Override
+        public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+
+            View dialogView =
+                    getActivity().getLayoutInflater().inflate(R.layout.pin_dialog_layout, null);
+            cipherPin = dialogView.findViewById(R.id.cipher_pin);
+            AlertDialog.Builder alertDialogBuilder =
+                    new AlertDialog.Builder(getActivity());
+
+            alertDialogBuilder.setTitle("Pin required");
+            alertDialogBuilder.setView(dialogView);
+            alertDialogBuilder.setPositiveButton("OK",
+                    new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                }
+            });
+            alertDialogBuilder.setNegativeButton("Cancel",
+                    new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Toast.makeText(getContext(),
+                            "Operation cancelled" + " " + "by" + " user",
+                            Toast.LENGTH_LONG).show();
+                }
+            });
+            return alertDialogBuilder.create();
+        }
+
+        @Override
+        public void onResume() {
+            super.onResume();
+            final AlertDialog d = (AlertDialog) getDialog();
+            if (d != null) {
+                Button positiveButton = d.getButton(Dialog.BUTTON_POSITIVE);
+                positiveButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (cipherPin.getText().toString().length() != 6) {
+                            Toast.makeText(getContext(), "PIN must be 6 " +
+                                    "digit" + " long", Toast.LENGTH_LONG).show();
+                        } else {
+                            AccountList accountListInstance =
+                                    AccountList.getInstance(getActivity());
+                            TransactionList transactionListInstance =
+                                    TransactionList.getInstance(getActivity());
+                            Gson gson = new Gson();
+                            String accountListJson =
+                                    gson.toJson(accountListInstance.getAccounts());
+                            String transactionListJson =
+                                    gson.toJson(transactionListInstance.getTransactions());
+                            Cipher cipher = Cipher.getInstance();
+                            int passcode =
+                                    Integer.parseInt(cipherPin.getText().toString());
+                            /*
+                             * Convert the UTF-16 string to base 64
+                             * string. This would
+                             * help in encryption which only supports
+                             * each character
+                             * represented by maximum of 7-bit only ( <
+                             * 128 ASCII).
+                             * The combined base 64 string is converted
+                             * to encrypted base
+                             * 64 string.
+                             * The encrypted string is then saved to
+                             * output stream using
+                             * UTF-8 encoding.
+                             */
+                            String combinedString =
+                                    android.util.Base64.encodeToString((accountListJson + SEPARATOR_CONSTANT + transactionListJson).getBytes(), Base64.DEFAULT);
+
+                            String stringtoSave =
+                                    cipher.encryptString(combinedString,
+                                            passcode);
+                            Log.d("File", stringtoSave);
+                            File accountKeeperDirectory =
+                                    new File(Environment.getExternalStorageDirectory().getAbsolutePath(), ACCOUNT_KEEPER_DIRECTORY);
+                            accountKeeperDirectory.mkdirs();
+                            String root =
+                                    Environment.getExternalStorageDirectory().getAbsolutePath() + ACCOUNT_KEEPER_DIRECTORY;
+                            String backupFilename =
+                                    "backup_" + (new Date().toString()) + ".ak";
+
+                            File backupFile = new File(root, backupFilename);
+                            try {
+                                FileOutputStream f =
+                                        new FileOutputStream(backupFile);
+                                f.write(stringtoSave.getBytes());
+                                f.close();
+                                Toast.makeText(getActivity(), "Saved " +
+                                        "Successfully " + "to " + ACCOUNT_KEEPER_DIRECTORY + " folder", Toast.LENGTH_LONG).show();
+                            } catch (FileNotFoundException e) {
+                                Toast.makeText(getActivity(), "An error " +
+                                        "occurred. " + "Please make " + "sure"
+                                        + " that you have provided the " +
+                                        "storage " + "permissions to the app" + ".", Toast.LENGTH_LONG).show();
+                            } catch (IOException e) {
+                                Toast.makeText(getActivity(), "An error " +
+                                        "occurred. " + "Please make " + "sure"
+                                        + " that you have provided the " +
+                                        "storage " + "permissions to the app" + ".", Toast.LENGTH_LONG).show();
+                            }
+                            d.dismiss();
+                        }
+                    }
+                });
+            }
+        }
+    }
+
+    static class RestoreDialogFragment extends DialogFragment {
+        private final Uri uri;
+        private EditText cipherPin;
+
+        RestoreDialogFragment(Uri uri) {
+            this.uri = uri;
+        }
+
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            setStyle(DialogFragment.STYLE_NORMAL,
+                    android.R.style.Theme_DeviceDefault_Dialog);
+        }
+
+        @NonNull
+        @Override
+        public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+
+            View dialogView =
+                    getActivity().getLayoutInflater().inflate(R.layout.pin_dialog_layout, null);
+            cipherPin = dialogView.findViewById(R.id.cipher_pin);
+            AlertDialog.Builder alertDialogBuilder =
+                    new AlertDialog.Builder(getActivity());
+
+            alertDialogBuilder.setTitle("Pin required");
+            alertDialogBuilder.setView(dialogView);
+            alertDialogBuilder.setPositiveButton("OK",
+                    new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                }
+            });
+            alertDialogBuilder.setNegativeButton("Cancel",
+                    new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Toast.makeText(getContext(),
+                            "Operation cancelled" + " " + "by" + " user",
+                            Toast.LENGTH_LONG).show();
+                }
+            });
+            return alertDialogBuilder.create();
+        }
+
+        @Override
+        public void onResume() {
+            super.onResume();
+            final AlertDialog d = (AlertDialog) getDialog();
+            if (d != null) {
+                Button positiveButton = d.getButton(Dialog.BUTTON_POSITIVE);
+                positiveButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (cipherPin.getText().toString().length() != 6) {
+                            Toast.makeText(getContext(), "PIN must be 6 " +
+                                    "digit" + " long", Toast.LENGTH_LONG).show();
+                        } else {
+                            try {
+                                InputStream inputStream =
+                                        getActivity().getContentResolver().openInputStream(uri);
+                                byte[] tmpArray = new byte[10000000];
+                                int data;
+                                int filePtr = 0;
+                                while ((data = inputStream.read()) != -1) {
+                                    tmpArray[filePtr++] = (byte) data;
+                                }
+                                byte[] tmpArrayCopy;
+                                tmpArrayCopy = Arrays.copyOf(tmpArray, filePtr);
+
+                                Cipher cipher = Cipher.getInstance();
+
+                                int passcode =
+                                        Integer.parseInt(cipherPin.getText().toString());
+
+
+                                String encryptedString =
+                                        new String(tmpArrayCopy); //
+                                // Base 64
+                                // encrypted
+                                // string
+
+                                String decryptedString =
+                                        cipher.decryptString(encryptedString,
+                                                passcode); // Base 64
+                                // decrypted string
+                                String originalString =
+                                        new String(android.util.Base64.decode(decryptedString, Base64.DEFAULT));
+                                String[] _d =
+                                        originalString.split(SEPARATOR_CONSTANT);
+                                Gson gson = new Gson();
+                                Account[] newAccountList =
+                                        gson.fromJson(_d[0], Account[].class);
+                                Transaction[] newTransactionList =
+                                        gson.fromJson(_d[1],
+                                                Transaction[].class);
+
+                                AccountList accountListInstance =
+                                        AccountList.getInstance(getActivity());
+                                accountListInstance.restoreDatabase(newAccountList);
+
+                                TransactionList transactionListInstance =
+                                        TransactionList.getInstance(getActivity());
+                                transactionListInstance.restoreDatabase(newTransactionList);
+                                d.dismiss();
+                                Toast.makeText(getContext(), "Restore " +
+                                        "Successful!", Toast.LENGTH_LONG).show();
+
+
+                            } catch (FileNotFoundException e) {
+                                Toast.makeText(getContext(), "An error " +
+                                        "occurred. " + "Please make " + "sure"
+                                        + " that you have " + "provided the " + "storage " + "permissions to the app.", Toast.LENGTH_LONG).show();
+                                d.dismiss();
+                            } catch (IOException e) {
+                                Toast.makeText(getContext(), "An error " +
+                                        "occurred. " + "Please make " + "sure"
+                                        + " that you have " + "provided the " + "storage " + "permissions to the app.", Toast.LENGTH_LONG).show();
+                                d.dismiss();
+
+                            } catch (Exception e) {
+                                Toast.makeText(getContext(),
+                                        "Incorrect PIN " + "or File is " +
+                                                "corrupted.",
+                                        Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    }
+                });
             }
         }
     }
