@@ -18,6 +18,6 @@
         android:ems="10"
         android:hint="@string/enter_a_6_digit_pin"
         android:inputType="numberPassword"
-        android:maxLength="10"
+        android:maxLength="6"
         tools:targetApi="o" />
 </LinearLayout>

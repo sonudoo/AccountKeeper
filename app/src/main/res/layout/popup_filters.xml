@@ -22,27 +22,38 @@
             android:layout_margin="5dp"
             android:spinnerMode="dialog" />
 
-        <EditText
-            android:id="@+id/pop_up_filter_start_date"
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:autofillHints=""
-            android:ems="10"
-            android:hint="@string/start_date"
-            android:inputType="date"
-            tools:targetApi="o" />
+            android:layout_height="match_parent">
 
-        <EditText
-            android:id="@+id/pop_up_filter_end_date"
+            <EditText
+                android:id="@+id/pop_up_filter_start_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:autofillHints=""
+                android:ems="10"
+                android:hint="@string/start_date"
+                android:inputType="date"
+                tools:targetApi="o" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:autofillHints=""
-            android:ems="10"
-            android:hint="@string/end_date"
-            android:inputType="date"
-            tools:targetApi="o" />
+            android:layout_height="match_parent">
+
+            <EditText
+                android:id="@+id/pop_up_filter_end_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:autofillHints=""
+                android:ems="10"
+                android:hint="@string/end_date"
+                android:inputType="date"
+                tools:targetApi="o" />
+
+        </com.google.android.material.textfield.TextInputLayout>
 
         <CheckBox
             android:id="@+id/pop_up_filter_transaction_type_1"

@@ -18,12 +18,6 @@
 
     <PreferenceCategory app:title="General">
 
-        <EditTextPreference
-            app:key="Name"
-            app:title="Name"
-            app:defaultValue="Your name"
-            app:useSimpleSummaryProvider="true" />
-
         <ListPreference
             app:defaultValue="₹"
             app:entries="@array/currencies"

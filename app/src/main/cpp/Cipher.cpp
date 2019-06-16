@@ -2,7 +2,7 @@
 // Created by susgup on 6/11/2019.
 //
 
-#include <string.h>
+#include <cstring>
 #include <stdlib.h>
 #include <set>
 #include <iostream>
@@ -15,7 +15,7 @@ generateMatrix(int passcode, std::vector<int> &encryptMatrix, std::vector<int> &
      * The following code generates (1<<6) unique random integers and then places other integers.
      * The algorithm is a modification of polyalphabetic cipher.
      */
-    srand(passcode);
+    srand(static_cast<unsigned int>(passcode));
     std::set<int> s;
     encryptMatrix.clear();
     decryptMatrix.clear();
