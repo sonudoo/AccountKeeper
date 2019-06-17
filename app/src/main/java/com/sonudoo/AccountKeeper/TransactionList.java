@@ -16,7 +16,7 @@ class Points {
     }
 }
 
-class TransactionList {
+public class TransactionList {
     /**
      * This is a singleton class representing a list of transactions.
      */

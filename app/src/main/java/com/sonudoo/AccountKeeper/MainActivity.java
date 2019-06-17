@@ -29,9 +29,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
-
-    public static final String ACCOUNT_KEEPER_DIRECTORY = "/AccountKeeper";
-    public static final String SEPARATOR_CONSTANT = "\n\n@@\n\n";
     /*
       Main Activity has three fragments within -
       1. Base fragment containing Home baseFragmentView.
@@ -45,42 +42,29 @@ public class MainActivity extends AppCompatActivity {
      * isStartupExecuted is set to true only when the user has passed the
      * authentication.
      */
+    public static final String ACCOUNT_KEEPER_DIRECTORY = "/AccountKeeper";
+    public static final String SEPARATOR_CONSTANT = "\n\n@@\n\n";
     private final int READ_EXTERNAL_STORAGE_REQUEST_CODE = 2343;
     private final int WRITE_EXTERNAL_STORAGE_REQUEST_CODE = 2344;
     private final int RESTORE_REQUEST_CODE = 20;
-    private boolean isStartupCodeExecuted;
     private FloatingActionButton filterButton;
-    private TransactionListFragment transactionListFragment;
+    private String currentFragment;
     private final BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
-                    showFragment(new BaseFragment());
-                    filterButton.hide(); // Hide the filter button on Home
-                    return true;
-                case R.id.navigation_transactions:
-                    transactionListFragment = new TransactionListFragment();
-                    filterButton.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            /*
-                              Show the filter pop up window defined in the
-                              transaction list fragment baseFragmentView.
-                             */
-                            transactionListFragment.popupFilterWindow.showAtLocation(transactionListFragment.getView(), Gravity.CENTER, 0, 0);
-                            Button applyFilterButton = transactionListFragment.popupFilterWindow.getContentView().findViewById(R.id.pop_up_filter_button);
-                            applyFilterButton.requestFocus();
-                            transactionListFragment.popupFilterWindow.setElevation(20);
-                        }
-                    });
-                    filterButton.show();
-                    showFragment(transactionListFragment);
+                    MainActivity.this.currentFragment = "Base";
+                    reloadFragment();
                     return true;
                 case R.id.navigation_accounts:
-                    showFragment(new AccountListFragment());
-                    filterButton.hide();
+                    MainActivity.this.currentFragment = "AccountList";
+                    reloadFragment();
+                    return true;
+                case R.id.navigation_transactions:
+                    MainActivity.this.currentFragment = "TransactionList";
+                    reloadFragment();
                     return true;
             }
             return false;
@@ -89,16 +73,53 @@ public class MainActivity extends AppCompatActivity {
     private BottomNavigationView navView;
 
 
-    private void showFragment(Fragment fragment) {
+    public void reloadFragment() {
         /*
           Loads a fragment to main activity
          */
-        if (fragment == null)
+        final Fragment newFragment;
+        if (currentFragment == null)
             return;
+        switch (currentFragment) {
+            case "Base":
+                newFragment = new BaseFragment();
+                filterButton.hide();
+                break;
+            case "AccountList":
+                newFragment = new AccountListFragment();
+                filterButton.hide();
+                break;
+            case "TransactionList":
+                newFragment = new TransactionListFragment();
+                filterButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        /*
+                          Show the filter pop up window defined in the
+                          transaction list fragment baseFragmentView.
+                         */
+                        ((TransactionListFragment) newFragment).popupFilterWindow.showAtLocation(newFragment.getView(), Gravity.CENTER, 0, 0);
+                        Button applyFilterButton = ((TransactionListFragment) newFragment).popupFilterWindow.getContentView().findViewById(R.id.pop_up_filter_button);
+                        applyFilterButton.requestFocus();
+                        ((TransactionListFragment) newFragment).popupFilterWindow.setElevation(20);
+                    }
+                });
+                filterButton.show();
+                break;
+            default:
+                navView.setSelectedItemId(R.id.navigation_home);
+                newFragment = new BaseFragment();
+        }
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.main_activity_scroll_view, fragment);
+        fragmentTransaction.replace(R.id.main_activity_scroll_view, newFragment);
         fragmentTransaction.commit();
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("currentFragment", this.currentFragment);
     }
 
     @Override
@@ -110,7 +131,33 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("  " + "Account Keeper");
         getSupportActionBar().setIcon(R.drawable.ic_account_balance_wallet_black_24dp);
         Objects.requireNonNull(getSupportActionBar()).setDisplayShowTitleEnabled(true);
-        startupCode();
+        if (savedInstanceState != null) {
+            this.currentFragment = savedInstanceState.getString("currentFragment");
+        } else {
+            this.currentFragment = "Base";
+        }
+        /*
+          filterButton belongs to main activity baseFragmentView because it
+          requires a
+          non-scrolling position.
+          It must be shown only on transaction list fragment.
+         */
+        navView = findViewById(R.id.main_activity_bottom_navigation);
+        navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayShowHomeEnabled(true);
+
+        /*
+          Hide the filter button upon activity startup
+         */
+        filterButton = findViewById(R.id.main_activity_filter_transaction_button);
+        filterButton.hide();
+
+        /*
+          Base fragment is the default fragment to load
+         */
+        reloadFragment();
+
+
     }
 
     @Override
@@ -137,31 +184,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void startupCode() {
-        /*
-          filterButton belongs to main activity baseFragmentView because it
-          requires a
-          non-scrolling position.
-          It must be shown only on transaction list fragment.
-         */
-        navView = findViewById(R.id.main_activity_bottom_navigation);
-        navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-        Objects.requireNonNull(getSupportActionBar()).setDisplayShowHomeEnabled(true);
-
-        /*
-          Base fragment is the default fragment to load
-         */
-        showFragment(new BaseFragment());
-
-        /*
-          Hide the filter button upon activity startup
-         */
-        filterButton = findViewById(R.id.main_activity_filter_transaction_button);
-        filterButton.hide();
-
-        isStartupCodeExecuted = true;
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent resultData) {
         /*
@@ -179,19 +201,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
         }
-    }
-
-    @Override
-    public void onResume() {
-        /*
-          This method loads the home fragment whenever the activity resumes
-          and has passed authentication
-         */
-        if (isStartupCodeExecuted) {
-            showFragment(new BaseFragment());
-            navView.setSelectedItemId(R.id.navigation_home);
-        }
-        super.onResume();
     }
 
     @Override
@@ -229,12 +238,6 @@ public class MainActivity extends AppCompatActivity {
                 intent.setType("*/*");
                 startActivityForResult(intent, RESTORE_REQUEST_CODE);
             }
-        } else if (id == R.id.share) {
-            Intent shareAppIntent = new Intent(Intent.ACTION_SEND);
-            shareAppIntent.setType("text/plain");
-            shareAppIntent.putExtra(Intent.EXTRA_TEXT, "Download Account " + "Keeper today.");
-            startActivity(shareAppIntent);
-            return true;
         } else if (id == R.id.settings) {
             Intent settingsActivityIntent = new Intent(MainActivity.this, SettingsActivity.class);
             startActivity(settingsActivityIntent);

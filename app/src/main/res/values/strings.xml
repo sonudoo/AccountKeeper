@@ -52,7 +52,7 @@
     <string name="account_name">Account Name</string>
     <string name="mit_license">MIT License</string>
     <string name="developed_by">Developed by,</string>
-    <string name="icon_made_by_freepik_from_nwww_flaticon_com">Icon made by Freepik from \nwww.flaticon.com</string>
+    <string name="icon_made_by_freepik_from_nwww_flaticon_com">Icon made by Freepik from \n<u>www.flaticon.com</u></string>
     <string name="mit_license_statement">Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the Software), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:\n\n The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.\n\n THE SOFTWARE IS PROVIDED AS IS, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</string>
     <string name="credits">Credits</string>
     <string name="account_keeper_icon">Account Keeper Icon</string>
@@ -61,4 +61,7 @@
     <string name="linkedin_icon">Linkedin Icon</string>
     <string name="github_icon">Github Icon</string>
     <string name="about">About</string>
+    <string name="apache_license_v2_0"><u>Apache License v2.0</u></string>
+    <string name="google_gson_library">Google GSON Library</string>
+    <string name="rate_the_app_on_play_store"><u>Rate the app on play store</u></string>
 </resources>

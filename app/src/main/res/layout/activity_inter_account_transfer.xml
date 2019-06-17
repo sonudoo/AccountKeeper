@@ -80,7 +80,8 @@
                 android:id="@+id/inter_account_transfer_fragment_inter_account_transfer_amount"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/amount_ex_100_0" />
+                android:hint="@string/amount_ex_100_0"
+                android:inputType="numberDecimal" />
         </com.google.android.material.textfield.TextInputLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

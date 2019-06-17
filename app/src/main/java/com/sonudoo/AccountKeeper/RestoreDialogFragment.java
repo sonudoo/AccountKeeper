@@ -105,6 +105,7 @@ public class RestoreDialogFragment extends DialogFragment {
 
                             TransactionList transactionListInstance = TransactionList.getInstance(getActivity());
                             transactionListInstance.restoreDatabase(newTransactionList);
+                            ((MainActivity) getActivity()).reloadFragment();
                             d.dismiss();
                             Toast.makeText(getContext(), "Restore " + "Successful!", Toast.LENGTH_LONG).show();
 

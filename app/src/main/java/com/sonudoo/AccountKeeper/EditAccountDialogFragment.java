@@ -19,17 +19,27 @@ public class EditAccountDialogFragment extends DialogFragment {
     private EditText editAccountDesc;
     private AccountList accountList;
     private View dialogView;
-    private AccountListAdapter accountListAdapter;
 
-    EditAccountDialogFragment(int accountNumber, AccountListAdapter accountListAdapter) {
-        this.accountNumber = accountNumber;
-        this.accountListAdapter = accountListAdapter;
+    EditAccountDialogFragment() {
+
     }
 
+    public static final EditAccountDialogFragment newInstance(int accountNumber) {
+        EditAccountDialogFragment editAccountDialogFragment = new EditAccountDialogFragment();
+        Bundle bdl = new Bundle(1);
+        bdl.putInt("ACCOUNT_NUMBER", accountNumber);
+        editAccountDialogFragment.setArguments(bdl);
+        editAccountDialogFragment.accountNumber = accountNumber;
+        return editAccountDialogFragment;
+    }
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setStyle(DialogFragment.STYLE_NORMAL, android.R.style.Theme_DeviceDefault_Dialog);
+        Bundle bdl = getArguments();
+        if (bdl != null) {
+            this.accountNumber = bdl.getInt("ACCOUNT_NUMBER");
+        }
     }
 
     @NonNull
@@ -86,7 +96,7 @@ public class EditAccountDialogFragment extends DialogFragment {
                             Toast.makeText(getContext(), "Account name " + "clashes " + "with another. Please " + "choose a different " + "name!", Toast.LENGTH_LONG).show();
                         } else {
                             Toast.makeText(getContext(), "Account details" + " edited successfully!", Toast.LENGTH_LONG).show();
-                            accountListAdapter.notifyDataSetChanged();
+                            ((MainActivity) getActivity()).reloadFragment();
                             dismiss();
                         }
                     }

@@ -27,7 +27,7 @@ import java.util.Date;
 import static com.sonudoo.AccountKeeper.MainActivity.ACCOUNT_KEEPER_DIRECTORY;
 import static com.sonudoo.AccountKeeper.MainActivity.SEPARATOR_CONSTANT;
 
-class BackupDialogFragment extends DialogFragment {
+public class BackupDialogFragment extends DialogFragment {
     static BackupDialogFragment singleton_instance = null;
     private EditText cipherPin;
 

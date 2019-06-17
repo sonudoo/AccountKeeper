@@ -1,6 +1,6 @@
 package com.sonudoo.AccountKeeper;
 
-class Transaction {
+public class Transaction {
     final int transactionAccountNumber;
     final double transactionAmount;
     final int transactionType;

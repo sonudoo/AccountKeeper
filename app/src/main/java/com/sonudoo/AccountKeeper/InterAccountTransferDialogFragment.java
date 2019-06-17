@@ -26,18 +26,29 @@ public class InterAccountTransferDialogFragment extends DialogFragment {
     private AccountList accountListInstance;
     private View dialogView;
     private int accountNumber;
-    private AccountListAdapter arrayAdapter;
     private ArrayList<Account> accountListCopy;
 
-    InterAccountTransferDialogFragment(int accountNumber, AccountListAdapter arrayAdapter) {
-        this.accountNumber = accountNumber;
-        this.arrayAdapter = arrayAdapter;
+    InterAccountTransferDialogFragment() {
+
+    }
+
+    public static final InterAccountTransferDialogFragment newInstance(int accountNumber) {
+        InterAccountTransferDialogFragment interAccountTransferDialogFragment = new InterAccountTransferDialogFragment();
+        Bundle bdl = new Bundle(1);
+        bdl.putInt("ACCOUNT_NUMBER", accountNumber);
+        interAccountTransferDialogFragment.setArguments(bdl);
+        interAccountTransferDialogFragment.accountNumber = accountNumber;
+        return interAccountTransferDialogFragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setStyle(DialogFragment.STYLE_NORMAL, android.R.style.Theme_DeviceDefault_Dialog);
+        Bundle bdl = getArguments();
+        if (bdl != null) {
+            this.accountNumber = bdl.getInt("ACCOUNT_NUMBER");
+        }
     }
 
     @NonNull
@@ -119,7 +130,7 @@ public class InterAccountTransferDialogFragment extends DialogFragment {
                                 if (transactionListInstance.addTransaction(fromAccount.accountNumber, amount, 2, "Being Amount transferred to " + toAccount.accountName + " Account")) {
                                     transactionListInstance.addTransaction(toAccount.accountNumber, amount, 3, "Being Amount transferred from " + fromAccount.accountName + " Account");
                                     Toast.makeText(getContext(), "Transfer Successful", Toast.LENGTH_LONG).show();
-                                    arrayAdapter.notifyDataSetChanged();
+                                    ((MainActivity) getActivity()).reloadFragment();
                                     dismiss();
                                 } else {
                                     Toast.makeText(getContext(), "Cannot withdraw more than " + accountListInstance.getAccounts().get((int) fromAccountIndex).getBalance(), Toast.LENGTH_LONG).show();

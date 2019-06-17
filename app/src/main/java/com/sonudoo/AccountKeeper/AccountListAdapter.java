@@ -48,7 +48,7 @@ public class AccountListAdapter extends RecyclerView.Adapter<AccountListAdapter.
         viewHolder.editAccountButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EditAccountDialogFragment editAccountDialogFragment = new EditAccountDialogFragment(i + 1, AccountListAdapter.this);
+                EditAccountDialogFragment editAccountDialogFragment = EditAccountDialogFragment.newInstance(i + 1);
                 editAccountDialogFragment.show(((AppCompatActivity) (context)).getSupportFragmentManager(), "Edit Account");
             }
         });
@@ -58,7 +58,7 @@ public class AccountListAdapter extends RecyclerView.Adapter<AccountListAdapter.
                 if (accountList.size() < 2) {
                     Toast.makeText(context, "At two accounts are needed to " + "conduct a " + "transfer", Toast.LENGTH_LONG).show();
                 } else {
-                    InterAccountTransferDialogFragment interAccountTransferDialogFragment = new InterAccountTransferDialogFragment(i + 1, AccountListAdapter.this);
+                    InterAccountTransferDialogFragment interAccountTransferDialogFragment = InterAccountTransferDialogFragment.newInstance(i + 1);
                     interAccountTransferDialogFragment.show(((AppCompatActivity) (context)).getSupportFragmentManager(), "Inter Account Transfer");
                 }
 

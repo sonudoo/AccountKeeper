@@ -112,6 +112,7 @@ public class AddTransactionDialogFragment extends DialogFragment {
                             type = 1;
                         if (TransactionList.getInstance(getContext()).addTransaction((int) addTransactionAccount.getSelectedItemId() + 1, transactionAmount, type, "Being " + journalEntry)) {
                             Toast.makeText(getContext(), "Transaction successful", Toast.LENGTH_LONG).show();
+                            ((MainActivity) getActivity()).reloadFragment();
                             dismiss();
                         } else {
                             Toast.makeText(getContext(), "Transaction unsuccessful. Ensure that the " + "transaction amount is less than " + "balance.", Toast.LENGTH_LONG).show();

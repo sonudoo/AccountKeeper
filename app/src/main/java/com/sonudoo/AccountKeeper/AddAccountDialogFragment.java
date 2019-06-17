@@ -22,6 +22,9 @@ public class AddAccountDialogFragment extends DialogFragment {
     private TextInputEditText addAccountDesc;
     private TextInputEditText addAccountInitialBalance;
 
+    AddAccountDialogFragment() {
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,8 +42,6 @@ public class AddAccountDialogFragment extends DialogFragment {
 
         accountList = AccountList.getInstance(getContext());
         transactionList = TransactionList.getInstance(getContext());
-        final AccountList accountList = AccountList.getInstance(getContext());
-        final TransactionList transactionList = TransactionList.getInstance(getContext());
 
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
 
@@ -81,16 +82,19 @@ public class AddAccountDialogFragment extends DialogFragment {
                     } else {
                         try {
                             double amount = Double.parseDouble(addAccountInitialBalance.getText().toString());
-                            if (amount < 0.01) {
+                            if (amount < 0) {
                                 Toast.makeText(getContext(), "Invalid " + "amount" + " entered. It must be " + "greater " + "than" + " " + "0.01!", Toast.LENGTH_LONG).show();
                             } else {
                                 Account newAccount = accountList.addAccount(addAccountName.getText().toString().toUpperCase(), addAccountDesc.getText().toString());
                                 if (newAccount == null) {
                                     Toast.makeText(getContext(), "Account " + "name " + "is" + " " + "already " + "taken!", Toast.LENGTH_LONG).show();
                                 } else {
-                                    transactionList.addTransaction(newAccount.accountNumber, amount, 1, "Being Initial amount added");
+                                    if (amount >= 0.01) {
+                                        transactionList.addTransaction(newAccount.accountNumber, amount, 1, "Being Initial amount added");
+                                    }
                                     Toast.makeText(getContext(), "Successfully added!", Toast.LENGTH_LONG).show();
-                                    dismiss();
+                                    ((MainActivity) getActivity()).reloadFragment();
+                                    d.dismiss();
                                 }
                             }
                         } catch (NumberFormatException e) {

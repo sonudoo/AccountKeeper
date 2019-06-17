@@ -16,7 +16,7 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-class BaseFragment extends Fragment {
+public class BaseFragment extends Fragment {
     /**
      * This inner class holds views and data for BaseFragment
      */
@@ -43,7 +43,7 @@ class BaseFragment extends Fragment {
                     Toast.makeText(mContext, "At least one account " + "is" + " needed to " + "transact", Toast.LENGTH_LONG).show();
                 } else {
                     AddTransactionDialogFragment addTransactionDialogFragment = new AddTransactionDialogFragment();
-                    addTransactionDialogFragment.show(getActivity().getSupportFragmentManager(), "Restore");
+                    addTransactionDialogFragment.show(getActivity().getSupportFragmentManager(), "AddTransaction");
 
                 }
             }
@@ -54,7 +54,7 @@ class BaseFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 AddAccountDialogFragment addAccountDialogFragment = new AddAccountDialogFragment();
-                addAccountDialogFragment.show(getActivity().getSupportFragmentManager(), "Restore");
+                addAccountDialogFragment.show(getActivity().getSupportFragmentManager(), "AddAccount");
             }
         });
         return baseFragmentView;

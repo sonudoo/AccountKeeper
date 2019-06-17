@@ -20,6 +20,19 @@
             android:layout_height="wrap_content">
 
             <TextView
+                android:id="@+id/rate_app_text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:text="@string/rate_the_app_on_play_store"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.482"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/developer_name" />
+
+            <TextView
                 android:id="@+id/mit_license_title"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -31,8 +44,9 @@
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayout4" />
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
 
             <TextView
                 android:id="@+id/developed_by_title"
@@ -60,6 +74,34 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/developed_by_title" />
 
+            <LinearLayout
+                android:id="@+id/linearLayout2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout4">
+
+                <TextView
+                    android:id="@+id/google_gson"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/google_gson_library"
+                    android:textAlignment="center" />
+
+                <TextView
+                    android:id="@+id/gson_license_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/apache_license_v2_0" />
+            </LinearLayout>
+
             <TextView
                 android:id="@+id/mit_license_statement"
                 android:layout_width="0dp"
@@ -69,6 +111,7 @@
                 android:layout_marginEnd="16dp"
                 android:text="@string/mit_license_statement"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/mit_license_title" />
 
@@ -84,35 +127,36 @@
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/developer_name" />
+                app:layout_constraintTop_toBottomOf="@+id/rate_app_text" />
 
             <ImageView
-                android:id="@+id/imageView2"
+                android:id="@+id/icon_github"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
                 android:contentDescription="@string/github_icon"
                 android:onClick="goToGithub"
-                app:layout_constraintEnd_toStartOf="@+id/imageView3"
+                app:layout_constraintEnd_toStartOf="@+id/icon_linkedin"
                 app:layout_constraintTop_toBottomOf="@+id/developed_by_title"
                 app:srcCompat="@drawable/ic_github" />
 
             <ImageView
-                android:id="@+id/imageView3"
+                android:id="@+id/icon_linkedin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
                 android:contentDescription="@string/linkedin_icon"
                 android:onClick="goToLinkedin"
-                app:layout_constraintEnd_toStartOf="@+id/imageView4"
+                app:layout_constraintEnd_toStartOf="@+id/icon_web"
                 app:layout_constraintTop_toBottomOf="@+id/developed_by_title"
                 app:srcCompat="@drawable/ic_linkedin" />
 
             <ImageView
-                android:id="@+id/imageView4"
+                android:id="@+id/icon_web"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
