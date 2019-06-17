@@ -20,10 +20,6 @@ public class EditAccountDialogFragment extends DialogFragment {
     private AccountList accountList;
     private View dialogView;
 
-    EditAccountDialogFragment() {
-
-    }
-
     public static final EditAccountDialogFragment newInstance(int accountNumber) {
         EditAccountDialogFragment editAccountDialogFragment = new EditAccountDialogFragment();
         Bundle bdl = new Bundle(1);

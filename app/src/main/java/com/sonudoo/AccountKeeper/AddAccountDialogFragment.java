@@ -22,9 +22,6 @@ public class AddAccountDialogFragment extends DialogFragment {
     private TextInputEditText addAccountDesc;
     private TextInputEditText addAccountInitialBalance;
 
-    AddAccountDialogFragment() {
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

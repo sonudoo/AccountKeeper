@@ -28,10 +28,6 @@ public class InterAccountTransferDialogFragment extends DialogFragment {
     private int accountNumber;
     private ArrayList<Account> accountListCopy;
 
-    InterAccountTransferDialogFragment() {
-
-    }
-
     public static final InterAccountTransferDialogFragment newInstance(int accountNumber) {
         InterAccountTransferDialogFragment interAccountTransferDialogFragment = new InterAccountTransferDialogFragment();
         Bundle bdl = new Bundle(1);
