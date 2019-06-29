@@ -18,6 +18,9 @@ public class Cipher {
     }
 
     private int[] stringtoArray(String s) {
+        /*
+            This method converts a string to integer array
+         */
         int[] stringArray = new int[s.length()];
         for (int i = 0; i < s.length(); i++) {
             stringArray[i] = (int) s.charAt(i);
@@ -26,6 +29,9 @@ public class Cipher {
     }
 
     private String arraytoString(int[] resultArray) {
+        /*
+            This method converts integer array to string.
+         */
         String resultString = "";
         for (int i1 : resultArray) {
             resultString += (char) i1;
@@ -34,12 +40,18 @@ public class Cipher {
     }
 
     public String encryptString(String s, int passcode) {
+        /*
+            This method encrypts a string with the given passcode.
+         */
         int[] stringArray = stringtoArray(s);
         int[] resultArray = encrypt(passcode, stringArray);
         return arraytoString(resultArray);
     }
 
     public String decryptString(String s, int passcode) {
+        /*
+            This method decrypts the string with the given passcode.
+         */
         int[] stringArray = stringtoArray(s);
         int[] resultArray = decrypt(passcode, stringArray);
         return arraytoString(resultArray);

@@ -49,19 +49,16 @@ public class TransactionList {
     }
 
     boolean addTransaction(int accountNumber, double transactionAmount,
-                           int transactionType,
-                           String transactionJournalEntry) {
+                           int transactionType, String transactionJournalEntry, long transactionTimestamp) {
         /*
           This method adds a transaction. If the transaction involves a
           withdrawal, then the method checks if the withdrawal is possible.
          */
         if (transactionType == 0 || transactionType == 2) {
             if (AccountList.getInstance(context).getAccount(accountNumber).withdraw(transactionAmount)) {
-                long currentTimestamp = new Date().getTime();
                 databaseHandler.addTransaction(transactionList.size(),
-                        accountNumber, transactionAmount, transactionType,
-                        transactionJournalEntry, currentTimestamp);
-                transactionList.add(new Transaction(transactionList.size() + 1, accountNumber, transactionAmount, transactionType, transactionJournalEntry, currentTimestamp));
+                        accountNumber, transactionAmount, transactionType, transactionJournalEntry, transactionTimestamp);
+                transactionList.add(new Transaction(transactionList.size() + 1, accountNumber, transactionAmount, transactionType, transactionJournalEntry, transactionTimestamp));
                 databaseHandler.updateAccount(accountNumber,
                         -transactionAmount);
                 return true;
@@ -70,11 +67,9 @@ public class TransactionList {
             }
         } else {
             AccountList.getInstance(context).getAccount(accountNumber).deposit(transactionAmount);
-            long currentTimestamp = new Date().getTime();
             databaseHandler.addTransaction(transactionList.size(),
-                    accountNumber, transactionAmount, transactionType,
-                    transactionJournalEntry, currentTimestamp);
-            transactionList.add(new Transaction(transactionList.size() + 1, accountNumber, transactionAmount, transactionType, transactionJournalEntry, currentTimestamp));
+                    accountNumber, transactionAmount, transactionType, transactionJournalEntry, transactionTimestamp);
+            transactionList.add(new Transaction(transactionList.size() + 1, accountNumber, transactionAmount, transactionType, transactionJournalEntry, transactionTimestamp));
             databaseHandler.updateAccount(accountNumber, transactionAmount);
             return true;
         }
@@ -220,13 +215,15 @@ public class TransactionList {
     }
 
     public void restoreDatabase(Transaction[] transactionList) {
+        /*
+            This method restores the database of transactions.
+         */
         databaseHandler.cleanTransactionDatabase();
         this.transactionList.clear();
         for (Transaction transaction : transactionList) {
             addTransaction(transaction.transactionAccountNumber,
                     transaction.transactionAmount,
-                    transaction.transactionType,
-                    transaction.transactionJournalEntry);
+                    transaction.transactionType, transaction.transactionJournalEntry, transaction.transactionTimestamp);
         }
     }
 }

@@ -17,10 +17,10 @@ import androidx.fragment.app.DialogFragment;
 
 import com.google.gson.Gson;
 
+import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
 
 public class RestoreDialogFragment extends DialogFragment {
     private final Uri uri;
@@ -75,21 +75,21 @@ public class RestoreDialogFragment extends DialogFragment {
                     } else {
                         try {
                             InputStream inputStream = getActivity().getContentResolver().openInputStream(uri);
-                            byte[] tmpArray = new byte[10000000];
-                            int data;
-                            int filePtr = 0;
-                            while ((data = inputStream.read()) != -1) {
-                                tmpArray[filePtr++] = (byte) data;
+                            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                            byte[] buffer = new byte[1024];
+                            int length;
+                            while ((length = inputStream.read(buffer)) != -1) {
+                                byteArrayOutputStream.write(buffer, 0, length);
                             }
-                            byte[] tmpArrayCopy;
-                            tmpArrayCopy = Arrays.copyOf(tmpArray, filePtr);
+
 
                             Cipher cipher = Cipher.getInstance();
 
                             int passcode = Integer.parseInt(cipherPin.getText().toString());
 
 
-                            String encryptedString = new String(tmpArrayCopy); // Base 64
+                            String encryptedString = new String(byteArrayOutputStream.toByteArray()); //
+                            // Base 64
                             // encrypted string
 
                             String decryptedString = cipher.decryptString(encryptedString, passcode); // Base 64

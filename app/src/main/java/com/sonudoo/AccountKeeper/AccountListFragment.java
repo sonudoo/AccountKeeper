@@ -44,9 +44,9 @@ public class AccountListFragment extends Fragment {
     public void onResume() {
         super.onResume();
         accountListAdapter.notifyDataSetChanged();
-            /*
-              If there are no accounts, then no accounts text is displayed.
-             */
+        /*
+          If there are no accounts, then no accounts text is displayed.
+         */
         TextView noAccountsText = accountListView.findViewById(R.id.main_activity_no_account_text);
         if (accountListInstance.getAccounts().size() == 0) {
             noAccountsText.setVisibility(View.VISIBLE);

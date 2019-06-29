@@ -60,6 +60,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     public Cursor getAccounts() {
+        /*
+            This method fetches all the accounts from the database.
+         */
         readableDatabase = getReadableDatabase();
         return readableDatabase.query(TABLE_ACCOUNTS, new String[]{ACCOUNT_ID
                         , ACCOUNT_NAME, ACCOUNT_DESC, ACCOUNT_BALANCE},
@@ -67,6 +70,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     public void updateAccount(int accountNumber, String newName, String newDesc) {
+        /*
+            This method updates an account by account number.
+         */
         writableDatabase = getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put(ACCOUNT_NAME, newName);
@@ -75,6 +81,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     public void updateAccount(int accountNumber, double deltaAmount) {
+        /*
+            This method updates account balance.
+         */
         writableDatabase = getWritableDatabase();
         String strSQL = "UPDATE " + TABLE_ACCOUNTS + " SET " + ACCOUNT_BALANCE + " = " +
                 ACCOUNT_BALANCE + " + " + deltaAmount + " WHERE " + ACCOUNT_ID + " = " + accountNumber;
@@ -82,6 +91,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     public Cursor getTransactions() {
+        /*
+            This method fetches all the transactions from the database.
+         */
         readableDatabase = getReadableDatabase();
         return readableDatabase.query(TABLE_TRANSACTIONS,
                 new String[]{TRANSACTION_ID,
@@ -91,6 +103,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     public void addAccount(int accountNumber, String accountName, String accountDesc) {
+        /*
+            This method adds an account to the database.
+         */
         writableDatabase = getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put(ACCOUNT_ID, accountNumber);
@@ -102,6 +117,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     public void addTransaction(int transactionNumber, int transactionAccountNumber, double transactionAmount,
                                int transactionType, String transactionJournalEntry, long transactionTimestamp) {
+        /*
+            This method adds a transaction to the database.
+         */
         writableDatabase = getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put(TRANSACTION_ID, transactionNumber);
@@ -114,12 +132,18 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     public void cleanAccountDatabase() {
+        /*
+            This method clears the accounts table.
+         */
         writableDatabase = getWritableDatabase();
         String TRUNCATE_ACCOUNTS_TABLE = "DELETE FROM " + TABLE_ACCOUNTS;
         writableDatabase.execSQL(TRUNCATE_ACCOUNTS_TABLE);
     }
 
     public void cleanTransactionDatabase() {
+        /*
+            This method clears the transaction table.
+         */
         writableDatabase = getWritableDatabase();
         String TRUNCATE_TRANSACTIONS_TABLE =
                 "DELETE FROM " + TABLE_TRANSACTIONS;

@@ -41,12 +41,15 @@ public class AccountList {
     }
 
     private boolean exists(String name) {
+        /*
+            This method checks if the account name exists in the account list.
+         */
         return this.accountNames.contains(name);
     }
 
     public Account addAccount(String accountName, String accountDesc) {
         /*
-          This method adds a new account and ensures non-duplicate names
+          This method adds a new account and ensures non-duplicate names.
          */
         if (exists(accountName)) {
             return null;
@@ -62,6 +65,9 @@ public class AccountList {
     }
 
     public double getTotalBalance() {
+        /*
+            This method returns the total balance from all the accounts.
+         */
         double total = 0;
         for (int i = 0; i < accountList.size(); i++) {
             total += accountList.get(i).getBalance();
@@ -70,10 +76,16 @@ public class AccountList {
     }
 
     public ArrayList<Account> getAccounts() {
+        /*
+            This method returns the account list.
+         */
         return accountList;
     }
 
     public Account getAccount(int accountNumber) {
+        /*
+            This method returns a single account by account number.
+         */
         return accountList.get(accountNumber - 1);
     }
 
@@ -97,6 +109,9 @@ public class AccountList {
     }
 
     public void restoreDatabase(Account[] accountsList) {
+        /*
+            This method restores the database and account list.
+         */
         databaseHandler.cleanAccountDatabase();
         this.accountList.clear();
         this.accountNames.clear();

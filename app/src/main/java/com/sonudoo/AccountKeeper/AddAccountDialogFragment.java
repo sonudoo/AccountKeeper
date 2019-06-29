@@ -14,6 +14,8 @@ import androidx.fragment.app.DialogFragment;
 
 import com.google.android.material.textfield.TextInputEditText;
 
+import java.util.Date;
+
 public class AddAccountDialogFragment extends DialogFragment {
     private AccountList accountList;
     private TransactionList transactionList;
@@ -87,7 +89,7 @@ public class AddAccountDialogFragment extends DialogFragment {
                                     Toast.makeText(getContext(), "Account " + "name " + "is" + " " + "already " + "taken!", Toast.LENGTH_LONG).show();
                                 } else {
                                     if (amount >= 0.01) {
-                                        transactionList.addTransaction(newAccount.accountNumber, amount, 1, "Being Initial amount added");
+                                        transactionList.addTransaction(newAccount.accountNumber, amount, 1, "Being Initial amount added", new Date().getTime());
                                     }
                                     Toast.makeText(getContext(), "Successfully added!", Toast.LENGTH_LONG).show();
                                     ((MainActivity) getActivity()).reloadFragment();

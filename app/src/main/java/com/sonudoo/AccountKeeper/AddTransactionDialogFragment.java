@@ -19,6 +19,7 @@ import androidx.fragment.app.DialogFragment;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 public class AddTransactionDialogFragment extends DialogFragment {
     private AccountList accountList;
@@ -110,7 +111,7 @@ public class AddTransactionDialogFragment extends DialogFragment {
                         int type = 0;
                         if (radioButton.getText().toString().equals("Income"))
                             type = 1;
-                        if (TransactionList.getInstance(getContext()).addTransaction((int) addTransactionAccount.getSelectedItemId() + 1, transactionAmount, type, "Being " + journalEntry)) {
+                        if (TransactionList.getInstance(getContext()).addTransaction((int) addTransactionAccount.getSelectedItemId() + 1, transactionAmount, type, "Being " + journalEntry, new Date().getTime())) {
                             Toast.makeText(getContext(), "Transaction successful", Toast.LENGTH_LONG).show();
                             ((MainActivity) getActivity()).reloadFragment();
                             dismiss();

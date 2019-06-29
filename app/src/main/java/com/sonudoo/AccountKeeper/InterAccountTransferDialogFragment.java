@@ -17,6 +17,7 @@ import androidx.fragment.app.DialogFragment;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 public class InterAccountTransferDialogFragment extends DialogFragment {
     private Spinner accountSpinner1;
@@ -123,8 +124,9 @@ public class InterAccountTransferDialogFragment extends DialogFragment {
                             } else {
                                 Account fromAccount = accountListInstance.getAccounts().get((int) fromAccountIndex);
                                 Account toAccount = accountListInstance.getAccounts().get((int) toAccountIndex);
-                                if (transactionListInstance.addTransaction(fromAccount.accountNumber, amount, 2, "Being Amount transferred to " + toAccount.accountName + " Account")) {
-                                    transactionListInstance.addTransaction(toAccount.accountNumber, amount, 3, "Being Amount transferred from " + fromAccount.accountName + " Account");
+                                long transactionTimestamp = new Date().getTime();
+                                if (transactionListInstance.addTransaction(fromAccount.accountNumber, amount, 2, "Being Amount transferred to " + toAccount.accountName + " Account", transactionTimestamp)) {
+                                    transactionListInstance.addTransaction(toAccount.accountNumber, amount, 3, "Being Amount transferred from " + fromAccount.accountName + " Account", transactionTimestamp);
                                     Toast.makeText(getContext(), "Transfer Successful", Toast.LENGTH_LONG).show();
                                     ((MainActivity) getActivity()).reloadFragment();
                                     dismiss();

@@ -38,10 +38,7 @@ public class MainActivity extends AppCompatActivity {
       baseFragmentView and
       related filter popup views.
      */
-    /*
-     * isStartupExecuted is set to true only when the user has passed the
-     * authentication.
-     */
+
     public static final String ACCOUNT_KEEPER_DIRECTORY = "/AccountKeeper";
     public static final String SEPARATOR_CONSTANT = "\n\n@@\n\n";
     private final int READ_EXTERNAL_STORAGE_REQUEST_CODE = 2343;

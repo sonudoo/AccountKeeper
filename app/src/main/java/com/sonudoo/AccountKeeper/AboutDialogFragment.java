@@ -16,6 +16,9 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 public class AboutDialogFragment extends DialogFragment {
+    /**
+     * This dialog fragment is used to create the About Dialog Fragment
+     */
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -27,6 +30,9 @@ public class AboutDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         View dialogView = getActivity().getLayoutInflater().inflate(R.layout.content_about, null);
+        /*
+            Flat icons credits
+         */
         TextView flatIcon = dialogView.findViewById(R.id.flat_icon_text);
         flatIcon.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -36,6 +42,10 @@ public class AboutDialogFragment extends DialogFragment {
             }
         });
 
+        /*
+            Gson credits
+         */
+
         TextView gsonLicenseText = dialogView.findViewById(R.id.gson_license_text);
         gsonLicenseText.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -44,6 +54,10 @@ public class AboutDialogFragment extends DialogFragment {
                 startActivity(browserIntent);
             }
         });
+
+        /*
+            Rate App
+         */
 
         TextView rateAppText = dialogView.findViewById(R.id.rate_app_text);
         rateAppText.setOnClickListener(new View.OnClickListener() {
@@ -60,6 +74,9 @@ public class AboutDialogFragment extends DialogFragment {
             }
         });
 
+        /*
+            Github Icon
+         */
 
         ImageView githubIcon = dialogView.findViewById(R.id.icon_github);
         githubIcon.setOnClickListener(new View.OnClickListener() {
@@ -70,14 +87,22 @@ public class AboutDialogFragment extends DialogFragment {
             }
         });
 
-        ImageView linkedinIcon = dialogView.findViewById(R.id.icon_linkedin);
-        linkedinIcon.setOnClickListener(new View.OnClickListener() {
+        /*
+            LinkedIn Icon
+         */
+
+        ImageView linkedInIcon = dialogView.findViewById(R.id.icon_linkedin);
+        linkedInIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.linkedin.com/in/sushantkgupta"));
                 startActivity(browserIntent);
             }
         });
+
+        /*
+            Web Icon
+         */
 
         ImageView webIcon = dialogView.findViewById(R.id.icon_web);
         webIcon.setOnClickListener(new View.OnClickListener() {
