@@ -55,9 +55,10 @@ public class TransactionListFragment extends Fragment {
         mContext = getContext();
         transactionListFragmentView = inflater.inflate(R.layout.content_list_transactions, container, attachToRoot);
 
-            /*
-              Set up the adapter and layout for the recycler accountListView.
-             */
+        /*
+          Set up the adapter and layout for the recycler accountListView.
+         */
+
         transactionListView = transactionListFragmentView.findViewById(R.id.main_activity_transaction_list);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setReverseLayout(true);
@@ -66,9 +67,9 @@ public class TransactionListFragment extends Fragment {
         TransactionListAdapter transactionListAdapter = new TransactionListAdapter(getActivity(), TransactionList.getInstance(mContext).getTransactions());
         transactionListView.setAdapter(transactionListAdapter);
 
-            /*
-              Set up the popup filter window.
-             */
+        /*
+          Set up the popup filter window.
+         */
 
         final View popUpView = inflater.inflate(R.layout.popup_filters, container, attachToRoot);
         int width = LinearLayout.LayoutParams.WRAP_CONTENT;
@@ -77,17 +78,19 @@ public class TransactionListFragment extends Fragment {
         popupFilterWindow.setBackgroundDrawable(new ColorDrawable(Color.WHITE));
 
 
-            /*
-              Initialize the timestamp range to default
-             */
+        /*
+          Initialize the timestamp range to default
+         */
+
         filterStartDate = popUpView.findViewById(R.id.pop_up_filter_start_date);
         filterStartTimestamp = -1;
         filterEndDate = popUpView.findViewById(R.id.pop_up_filter_end_date);
         filterEndTimestamp = -1;
 
-            /*
-              Open Date dialog picker when date field is focused or clicked.
-             */
+        /*
+          Open Date dialog picker when date field is focused or clicked.
+         */
+
         filterStartDate.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -95,10 +98,10 @@ public class TransactionListFragment extends Fragment {
                     DatePickerDialog dialog = new DatePickerDialog(mContext, new DatePickerDialog.OnDateSetListener() {
                         @Override
                         public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                                /*
-                                  Upon selection of date, show the date on
-                                  the text box
-                                 */
+                            /*
+                              Upon selection of date, show the date on
+                              the text box
+                             */
                             filterStartDate.setText(String.format("%d/%d" + "/%d", dayOfMonth, month + 1, year));
                             filterStartTimestamp = new GregorianCalendar(year, month, dayOfMonth).getTime().getTime();
                         }
@@ -106,10 +109,10 @@ public class TransactionListFragment extends Fragment {
                     dialog.setOnCancelListener(new DatePickerDialog.OnCancelListener() {
                         @Override
                         public void onCancel(DialogInterface dialogInterface) {
-                                /*
-                                  If cancelled, reset the filter to default
-                                  value
-                                 */
+                            /*
+                              If cancelled, reset the filter to default
+                              value
+                             */
                             filterStartDate.setText("");
                             filterStartTimestamp = -1;
                         }
@@ -125,10 +128,10 @@ public class TransactionListFragment extends Fragment {
                 DatePickerDialog dialog = new DatePickerDialog(mContext, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                            /*
-                              Upon selection of date, show the date on
-                              the text box
-                             */
+                        /*
+                          Upon selection of date, show the date on
+                          the text box
+                         */
                         filterStartDate.setText(String.format("%d/%d/%d", dayOfMonth, month + 1, year));
                         filterStartTimestamp = new GregorianCalendar(year, month, dayOfMonth).getTime().getTime();
                     }
@@ -136,10 +139,10 @@ public class TransactionListFragment extends Fragment {
                 dialog.setOnCancelListener(new DatePickerDialog.OnCancelListener() {
                     @Override
                     public void onCancel(DialogInterface dialogInterface) {
-                            /*
-                              If cancelled, reset the filter to default
-                              value
-                             */
+                        /*
+                          If cancelled, reset the filter to default
+                          value
+                         */
                         filterStartDate.setText("");
                         filterStartTimestamp = -1;
                     }
@@ -155,10 +158,10 @@ public class TransactionListFragment extends Fragment {
                     DatePickerDialog dialog = new DatePickerDialog(mContext, new DatePickerDialog.OnDateSetListener() {
                         @Override
                         public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                                /*
-                                  Upon selection of date, show the date on
-                                  the text box
-                                 */
+                            /*
+                              Upon selection of date, show the date on
+                              the text box
+                             */
                             filterEndDate.setText(String.format("%d/%d/%d", dayOfMonth, month + 1, year));
                             filterEndTimestamp = new GregorianCalendar(year, month, dayOfMonth).getTime().getTime();
                         }
@@ -166,10 +169,10 @@ public class TransactionListFragment extends Fragment {
                     dialog.setOnCancelListener(new DatePickerDialog.OnCancelListener() {
                         @Override
                         public void onCancel(DialogInterface dialogInterface) {
-                                /*
-                                  If cancelled, reset the filter to default
-                                  value
-                                 */
+                            /*
+                              If cancelled, reset the filter to default
+                              value
+                             */
                             filterEndDate.setText("");
                             filterEndTimestamp = -1;
                         }
@@ -186,10 +189,10 @@ public class TransactionListFragment extends Fragment {
                 DatePickerDialog dialog = new DatePickerDialog(mContext, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                            /*
-                              Upon selection of date, show the date on
-                              the text box
-                             */
+                        /*
+                          Upon selection of date, show the date on
+                          the text box
+                         */
                         filterEndDate.setText(String.format("%d/%d/%d", dayOfMonth, month + 1, year));
                         filterEndTimestamp = new GregorianCalendar(year, month, dayOfMonth).getTime().getTime();
 
@@ -205,10 +208,10 @@ public class TransactionListFragment extends Fragment {
                 dialog.setOnCancelListener(new DatePickerDialog.OnCancelListener() {
                     @Override
                     public void onCancel(DialogInterface dialogInterface) {
-                            /*
-                              If cancelled, reset the filter to default
-                              value
-                             */
+                        /*
+                          If cancelled, reset the filter to default
+                          value
+                         */
                         filterEndDate.setText("");
                         filterEndTimestamp = -1;
                     }
@@ -239,12 +242,12 @@ public class TransactionListFragment extends Fragment {
         applyFilterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    /*
-                      If start time is set and end time is not set then set
-                      end time as current time.
-                      If end time is set and start time is not set then set
-                      start time to 0.
-                     */
+                /*
+                  If start time is set and end time is not set then set
+                  end time as current time.
+                  If end time is set and start time is not set then set
+                  start time to 0.
+                 */
                 if (filterStartTimestamp != -1) {
                     if (filterEndTimestamp == -1) {
                         filterEndTimestamp = new Date().getTime();
@@ -268,9 +271,9 @@ public class TransactionListFragment extends Fragment {
                 boolean showExpense = filterExpenseCheck.isChecked();
                 boolean showIncome = filterIncomeCheck.isChecked();
 
-                    /*
-                      Get the filtered transactions and display them.
-                     */
+                /*
+                  Get the filtered transactions and display them.
+                 */
                 ArrayList<Transaction> filteredTransactionList = TransactionList.getInstance(mContext).getFilteredTransactions(filterStartTimestamp, filterEndTimestamp, accountNumber, showExpense, showIncome);
                 TransactionListAdapter transactionListAdapter = new TransactionListAdapter(getActivity(), filteredTransactionList);
                 transactionListView.setAdapter(transactionListAdapter);
