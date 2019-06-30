@@ -164,6 +164,13 @@ public class TransactionListFragment extends Fragment {
                              */
                             filterEndDate.setText(String.format("%d/%d/%d", dayOfMonth, month + 1, year));
                             filterEndTimestamp = new GregorianCalendar(year, month, dayOfMonth).getTime().getTime();
+
+                            /*
+                                Add 23 hours, 59 minutes and 59 seconds to get
+                                the end time for the day
+                             */
+                            long numberOfMilliSecondsInADay = 24 * 60 * 60 * 1000;
+                            filterEndTimestamp += numberOfMilliSecondsInADay - 1;
                         }
                     }, Calendar.getInstance().get(Calendar.YEAR), Calendar.getInstance().get(Calendar.MONTH), Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
                     dialog.setOnCancelListener(new DatePickerDialog.OnCancelListener() {
